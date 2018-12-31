@@ -1,0 +1,61 @@
+#!/bin/bash
+
+# Author        : Tony Bian <biantonghe@gmail.com>
+# Last Modified : 2018-12-22 20:52
+# Filename      : gh-md-toc
+
+if [ -z "$1" ]; then
+    echo "gh-md-toc [file|directory]"
+    exit 1
+fi
+
+function toc() {
+    if [ "$(head -1 $1)" != "<!--ts-->" ]; then
+        sed -i '1i\<!--ts-->' $1
+        sed -i '2i\<!--te-->' $1
+    else
+        sed -i '0,/<!--te-->/d' $1
+        sed -i '1i\<!--ts-->' $1
+        sed -i '2i\<!--te-->' $1
+    fi
+
+    /usr/bin/gh-md-toc --insert $1
+    rm -f *.md.*
+}
+
+if [[ -d $1 ]]; then
+    mdfiles=($(find $1 -type f -regextype "posix-egrep" -regex ".*.m(d|arkdown|down)"))
+    echo "Markdown file list:"
+    for mdfile in "${mdfiles[@]}"; do
+        echo $mdfile
+    done
+
+    echo
+
+    unset choice
+    read -p "Please confirm whether you want to add ToC(Table of Content) to all the above markdown files[y/N]: " choice
+    if [[ -z $choice ]]; then
+        exit 0
+    fi
+
+    case $choice in
+        y | yes | Y)
+            choice=y
+            ;;
+        n | no | N)
+            choice=N
+            ;;
+        *)
+            read -p "Please confirm whether you want to add ToC(Table of Content) to all the above markdown files[y/N]: " choice
+            ;;
+    esac
+
+    if [[ $choice == y ]]; then
+        for mdfile in "${mdfiles[@]}"; do
+            toc $mdfile
+        done
+    fi
+
+elif [[ -r $1 ]]; then
+    toc $1
+fi

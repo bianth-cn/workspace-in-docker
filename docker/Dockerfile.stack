@@ -1,0 +1,99 @@
+FROM buildpack-deps:bionic
+
+# https://stackoverflow.com/questions/20635472/using-the-run-instruction-in-a-dockerfile-with-source-does-not-work
+SHELL ["/bin/bash", "-c"]
+
+ENV DEFAULT_PY_VERSION=2.7.15 \
+    DEFAULT_PY3_VERSION=3.6.7 \
+    DEFAULT_GO_VERSION=1.10.7
+
+ENV LANG=C.UTF-8 \
+    LC_ALL=C.UTF-8 \
+    SRC_HOME=/usr/local/src
+
+WORKDIR ${SRC_HOME}
+
+# https://stackoverflow.com/questions/22466255/is-it-possible-to-answer-dialog-questions-when-installing-under-docker/23570150#23570150
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN set -e \
+        && sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list \
+        && apt-get update \
+        && apt-get install -y --no-install-recommends \
+            apt-utils build-essential bison tk-dev \
+        \
+        && rm -rf /var/lib/apt/lists/*
+
+RUN set -e \
+        && git clone https://github.com/pyenv/pyenv.git /root/.pyenv \
+        && echo 'export PYENV_ROOT="/root/.pyenv"' >/etc/profile.d/pyenv-init.sh \
+        && echo 'export PATH="/root/.pyenv/bin:${PATH}"' >>/etc/profile.d/pyenv-init.sh \
+        && echo 'eval "$(pyenv init -)"' >>/etc/profile.d/pyenv-init.sh \
+        && echo 'export PYTHON_CONFIGURE_OPTS="--enable-shared"' >>/etc/profile.d/pyenv-init.sh \
+        \
+        && source /etc/profile.d/pyenv-init.sh \
+        && pyenv install ${DEFAULT_PY_VERSION} \
+        && pyenv install ${DEFAULT_PY3_VERSION} \
+        && pyenv rehash \
+        \
+        && gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" \
+        \
+        && PYTHON_CONFIGURE_OPTS="--build=$gnuArch --enable-shared --enable-unicode=ucs4" \
+             pyenv local ${DEFAULT_PY_VERSION} \
+        && pip install --no-cache-dir pip --upgrade \
+        && pip install --no-cache-dir pipenv==2018.5.18 ipython \
+        \
+        && PYTHON_CONFIGURE_OPTS="--build=$gnuArch --enable-loadable-sqlite-extensions --enable-shared --with-system-expat --with-system-ffi --without-ensurepip" \
+             pyenv local ${DEFAULT_PY3_VERSION} \
+        && pip install --no-cache-dir pip --upgrade \
+        && pip install --no-cache-dir pipenv==2018.5.18 ipython \
+        \
+        && mkdir -p ${SRC_HOME}/pyenv/versions \
+        && mv /root/.pyenv/versions/* ${SRC_HOME}/pyenv/versions \
+        && ln -sf ${SRC_HOME}/pyenv/versions/* /root/.pyenv/versions \
+        \
+        && for name in $(find /root/.pyenv -name ".git*"); do rm -rf $name; done \
+        && for name in $(find ${SRC_HOME} -name ".git*"); do rm -rf $name; done \
+        && for name in $(find ${SRC_HOME} -name "*.pyc"); do rm -rf $name; done \
+        && for name in $(find ${SRC_HOME} -name "*.pyo"); do rm -rf $name; done \
+        && for name in $(find ${SRC_HOME} -name "__pycache__"); do rm -rf $name; done \
+        && rm -rf /tmp/* ~/.cache
+
+RUN set -ex \
+        && wget https://dl.google.com/go/go${DEFAULT_GO_VERSION}.linux-amd64.tar.gz \
+        && tar -C ${SRC_HOME} -xzf go${DEFAULT_GO_VERSION}.linux-amd64.tar.gz \
+        && curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer | /bin/bash \
+        && sed -i 's#https://go.googlesource.com/go#https://github.com/golang/go#g' /root/.gvm/scripts/install \
+        && sed -i 's#https://go.googlesource.com/go#https://github.com/golang/go#g' /root/.gvm/scripts/listall \
+        \
+        && source /root/.gvm/scripts/gvm \
+        && PATH=${SRC_HOME}/go/bin:${PATH} gvm install go${DEFAULT_GO_VERSION} \
+        && gvm use go${DEFAULT_GO_VERSION} --default \
+        \
+        && mkdir -p ${SRC_HOME}/gvm/gos \
+        && mv /root/.gvm/gos/* ${SRC_HOME}/gvm/gos \
+        && ln -sf ${SRC_HOME}/gvm/gos/* /root/.gvm/gos \
+        \
+        && export GOPATH=/tmp/go \
+        && go get -u github.com/Masterminds/glide \
+        && mv /tmp/go/bin/* ${SRC_HOME}/gvm/gos/go${DEFAULT_GO_VERSION}/bin \
+        \
+        && for name in $(find /root/.gvm -name ".git*"); do rm -rf $name; done \
+        && for name in $(find ${SRC_HOME} -name ".git*"); do rm -rf $name; done \
+        && rm -rf /root/.gvm/archive/go \
+        && rm -rf ${SRC_HOME}/go* \
+        && rm -rf /tmp/* ~/.cache
+
+# Install system tools
+RUN set -e \
+        && rm /etc/dpkg/dpkg.cfg.d/excludes \
+        && apt-get update \
+        && apt-get install -y --no-install-recommends \
+            man-db manpages \
+            \
+            bash-completion sysstat inetutils-ping net-tools telnet dnsutils traceroute tcpdump tree dos2unix unzip expect \
+        \
+        && rm -rf /var/lib/apt/lists/*
+
+RUN echo 'source /etc/profile' >>/root/.bashrc \
+        && echo 'unset GOPATH' >>/root/.bashrc

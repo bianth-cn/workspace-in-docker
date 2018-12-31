@@ -1,0 +1,6 @@
+[diff]
+external = git_diff_wrapper
+[pager]
+diff =
+[core]
+editor = /usr/local/vim.py3/bin/vim

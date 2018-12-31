@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Author        : Tony Bian <biantonghe@gmail.com>
+# Last Modified : 2018-12-07 17:17
+# Filename      : guide
+
+cat <<GUIDE | more
+
+施工中……
+
+GUIDE

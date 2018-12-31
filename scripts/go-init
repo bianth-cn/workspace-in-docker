@@ -1,0 +1,142 @@
+#!/bin/bash
+
+# Author        : Tony Bian <biantonghe@gmail.com>
+# Last Modified : 2018-12-22 20:51
+# Filename      : go-init
+
+set -e
+
+PROJECT_NAME=$1
+GO_VERSION=$2
+
+WORKSPACE=/root/workspace
+PROJECT_BASE=${WORKSPACE}/go-projects
+
+GO_VERSIONS=$(ls ${GVM_ROOT}/gos | egrep "^go[0-9]\.[0-9]{1,2}\.[0-9]{1,2}$")
+
+if [[ -n ${VIRTUAL_ENV} ]]; then
+    echo "请先使用exit命令退出当前虚拟环境!"
+    echo
+    exit 1
+fi
+
+function usage() {
+    echo "说明:"
+    echo "    初始化go项目, 并进入项目的虚拟环境"
+    echo "    当选择未安装的go版本时, 将自动使用gvm安装"
+    echo
+    echo "用法:"
+    echo "    go-i <project_name> [go_version]"
+    echo
+    echo "参数说明:"
+    echo "    project_name: 项目名称"
+    echo -e "    go_version:   go版本, 可选参数, 默认使用\e[36m${DEFAULT_GO_VERSION}\e[0m"
+    echo
+    echo "已安装的go版本:"
+
+    for i in ${GO_VERSIONS}; do
+        if [[ ${i:2} == ${DEFAULT_GO_VERSION} ]]; then
+            echo -e "    \e[36m${i:2}\e[0m"
+        else
+            echo "    ${i:2}"
+        fi
+    done
+
+    echo
+    exit 1
+}
+
+if [[ $# -gt 2 || $# -lt 1 ]]; then
+    usage
+fi
+
+if [[ -z ${GO_VERSION} ]]; then
+    GO_VERSION=${DEFAULT_GO_VERSION}
+fi
+
+if [[ ! ${GO_VERSION} =~ ^([0-9].[0-9]{1,2}.[0-9]{1,2})$ ]]; then
+    usage
+fi
+
+num=1
+for version in ${GO_VERSIONS}; do
+    if [[ go${GO_VERSION} == ${version} ]]; then
+        let num++
+    fi
+done
+
+if [[ $num == 1 ]]; then
+    echo -e "\e[33mWarning\e[0m: Go \e[36m${GO_VERSION}\e[0m was not found on your system…"
+    read -p "Would you like us to install Go ${GO_VERSION} with gvm? [Y/n]:" value
+    if [[ -z ${value} ]]; then
+        value=Y
+    fi
+    case ${value} in
+        Y)
+            source ${GVM_ROOT}/scripts/gvm
+            gvm install go${GO_VERSION}
+            ;;
+        *)
+            exit 1
+            ;;
+    esac
+fi
+
+PROJECT_HOME=${PROJECT_BASE}/${GO_VERSION}/${PROJECT_NAME}
+
+if [[ -d ${PROJECT_HOME} ]]; then
+    echo "项目 ${GO_VERSION}/${PROJECT_NAME} 已存在!"
+    echo
+    exit 1
+fi
+
+mkdir -p ${PROJECT_HOME}/{bin,pkg,src} && cd ${PROJECT_HOME}
+
+cd ${PROJECT_HOME}/src
+
+cp ${SRC_HOME}/templates/gitignore/go ./.gitignore
+git flow init -d >/dev/null
+
+$(which expect) -c '
+spawn glide init
+expect -re "^$"
+send "Y\n"
+expect eof
+' >/dev/null
+
+cat >${PROJECT_HOME}/.venv <<EOF
+HOME=${PROJECT_HOME}
+cd \${HOME}
+source ${GVM_ROOT}/scripts/gvm
+gvm use go${GO_VERSION}
+gvm pkgset create --local >/dev/null 2>&1
+gvm pkgset use --local
+
+export GOPATH=\${HOME}
+export GOBIN=\${GOPATH}/bin
+export VIRTUAL_ENV=\$(echo \$GOPATH | awk -F '/' '{print \$NF}')
+PS1="[go][\\e[36m${GO_VERSION}\\e[0m](\\e[37m\$VIRTUAL_ENV\\e[0m)[\W]\\e[36m$\\e[0m "
+cd \${HOME}/src
+EOF
+
+for dir in $(find /root -maxdepth 1 -name ".*" ! -name ".gvm" ! -name ".pyenv" ! -name ".wget-hsts"); do
+    relative_dir=$(echo ${dir} | awk -F '/' '{print $NF}')
+    ln -sf ${dir} ${PROJECT_HOME}/${relative_dir}
+done
+
+GO_BINARIES=$(find ${GVM_ROOT}/gos/go${DEFAULT_GO_VERSION}/bin | grep -vE "/bin/go$|/bin$")
+GO_ROOT=${GVM_ROOT}/gos/go${GO_VERSION}
+
+for name in ${GO_BINARIES}; do
+    if [[ ! -f ${GO_ROOT}/bin/$(echo ${name} | awk -F '/' '{print $NF}') ]]; then
+        cp ${name} ${GO_ROOT}/bin
+    fi
+done
+
+expect <(
+    cat <<-EXPECT
+  spawn ${SHELL}
+  send ". ${PROJECT_HOME}/.venv\r"
+  interact
+EXPECT
+)

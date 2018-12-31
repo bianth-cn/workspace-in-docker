@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Author        : Tony Bian <biantonghe@gmail.com>
+# Last Modified : 2018-12-22 21:01
+# Filename      : pipenv-install
+
+if [[ -z ${VIRTUAL_ENV} ]]; then
+    echo "请先使用pes命令进入VENV workspace!"
+    exit 1
+fi
+
+if [[ $# -ge 1 ]]; then
+    pipenv install "$@"
+else
+    echo "说明:"
+    echo "    使用pipenv安装python模块"
+    echo ""
+    echo "用法:"
+    echo "    pei <module_name_list>"
+    echo ""
+    echo "参数说明:"
+    echo "    module_name_list: 待安装的模块列表, 使用空格分隔"
+    echo ""
+    exit 1
+fi

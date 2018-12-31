@@ -1,0 +1,2 @@
+#!/bin/sh
+/usr/local/vim.py3/bin/vimdiff "$2" "$5"

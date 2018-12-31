@@ -1,0 +1,92 @@
+#!/bin/bash
+
+# Author        : Tony Bian <biantonghe@gmail.com>
+# Last Modified : 2018-12-22 21:03
+# Filename      : pipenv-shell
+
+set -e
+
+WORKSPACE=/root/workspace
+PROJECT_BASE=${WORKSPACE}/py-projects
+
+if [[ -n ${VIRTUAL_ENV} ]]; then
+    echo "请先使用exit命令退出当前虚拟环境!"
+    echo
+    exit 1
+fi
+
+if [[ -d ${PROJECT_BASE} ]]; then
+    echo >/dev/null
+else
+    echo "项目根目录不存在, 请先使用'pe-i'命令创建项目."
+    echo
+    exit 1
+fi
+
+PROJECT_VERSIONS=$(ls ${PROJECT_BASE})
+
+function projects() {
+    echo
+    echo "可选项目:"
+    num=1
+    for version in ${PROJECT_VERSIONS}; do
+        if [[ ${version} == ${DEFAULT_PY_VERSION} ]]; then
+            PROJECT_VERSION=$(echo -e "\e[33m${version}\e[0m")
+        elif [[ ${version} == ${DEFAULT_PY3_VERSION} ]]; then
+            PROJECT_VERSION=$(echo -e "\e[34m${version}\e[0m")
+        else
+            PROJECT_VERSION=${version}
+        fi
+        PROJECT_NAMES=$(ls ${PROJECT_BASE}/${version})
+        for name in ${PROJECT_NAMES}; do
+            echo -e "    [\e[37m${num}\e[0m] (${PROJECT_VERSION}) ${name}"
+            let num++
+        done
+    done
+    echo
+    exit 1
+}
+
+if [ $# -ne 1 ]; then
+    echo "说明:"
+    echo "    进入指定python项目的虚拟环境"
+    echo
+    echo "用法:"
+    echo "    pes <project_num>"
+    echo
+    echo "参数说明:"
+    echo "    project_num: 项目序号"
+
+    projects
+fi
+
+if [[ $1 == *[!0-9]* ]]; then
+    echo "请输入项目序号!"
+    projects
+fi
+
+num=1
+for version in ${PROJECT_VERSIONS}; do
+    PROJECT_NAMES=$(ls ${PROJECT_BASE}/${version})
+    for name in ${PROJECT_NAMES}; do
+        PROJECT[num]=${version}/${name}
+        let num++
+    done
+done
+
+num=$1
+PROJECT=${PROJECT[num]}
+PROJECT_HOME=${PROJECT_BASE}/${PROJECT}
+
+if [[ -z ${PROJECT[num]} ]]; then
+    echo "项目不存在!"
+    projects
+fi
+
+for dir in $(find /root -maxdepth 1 -name ".*" ! -name ".gvm" ! -name ".pyenv" ! -name ".wget-hsts"); do
+    relative_dir=$(echo ${dir} | awk -F '/' '{print $NF}')
+    ln -sf ${dir} ${PROJECT_HOME}/${relative_dir}
+done
+
+cd ${PROJECT_HOME}
+SHELL=/bin/bash pipenv shell

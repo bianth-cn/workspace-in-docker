@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Author        : Tony Bian <biantonghe@gmail.com>
+# Last Modified : 2018-12-22 21:04
+# Filename      : pipenv-uninstall
+
+if [[ $# -eq 1 ]]; then
+    PKGS=$(pipenv graph --json | python ${SRC_HOME}/scripts/depends.py $1)
+    if [[ ${PKGS} == "" ]]; then
+        echo "$1 is a protected module!"
+        exit 1
+    elif [[ ${PKGS} == set* || ${PKGS} == {* ]]; then
+        echo "$1 is a child module, it's parents are ${PKGS}"
+        exit 1
+    fi
+    pipenv uninstall ${PKGS}
+else
+    echo "
+说明:
+    递归删除python模块及其依赖, 如果依赖被其他模块引用则保留此依赖
+
+用法:
+    pe-u <module_name>
+
+参数说明:
+    module_name: 模块名称
+"
+fi

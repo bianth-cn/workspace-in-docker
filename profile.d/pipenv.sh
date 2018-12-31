@@ -1,0 +1,8 @@
+alias pe='PIPENV_VENV_IN_PROJECT=1 pipenv'
+alias pe-i='pipenv-init'
+alias pe-u='pipenv-uninstall'
+alias pei='pipenv-install'
+alias pes='pipenv-shell'
+alias peg='pe graph'
+alias pel='pe lock'
+alias peu='pe update'

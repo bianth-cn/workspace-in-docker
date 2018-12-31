@@ -1,0 +1,176 @@
+FROM tonybian/workspace-in-docker:stack
+
+# Install the dependencies of vim and ale
+RUN set -e \
+        && curl -sL https://deb.nodesource.com/setup_8.x | bash - \
+        && apt-get install -y --no-install-recommends \
+            shellcheck nodejs ruby \
+            \
+            libgtk2.0-dev gettext lua5.3 liblua5.3-dev luajit libluajit-5.1 ruby-dev libperl-dev \
+            \
+            fish libtool-bin ninja-build xclip ctags cmake silversearcher-ag \
+        \
+        && rm -rf /var/lib/apt/lists/*
+
+# Compile vim with python and python3 respectively
+RUN set -ex \
+        && source /etc/profile \
+        && wget ftp://ftp.vim.org/pub/vim/unix/vim-8.1.tar.bz2 \
+        && tar -xjvf vim-8.1.tar.bz2 \
+        && cd vim81 \
+        && pyenv local ${DEFAULT_PY3_VERSION} \
+        && ./configure \
+             --prefix=/usr/local/vim.py3 \
+             --with-features=huge \
+             --enable-cscope \
+             --enable-multibyte \
+             --enable-python3interp \
+             --enable-rubyinterp \
+             --enable-perlinterp \
+             --enable-luainterp \
+             --enable-tclinterp \
+             --with-luajit \
+             --enable-gui=gtk2 \
+        && make && make install \
+        && ln -sf /usr/local/vim.py3/bin/vim /usr/bin/vim \
+        && cd ${SRC_HOME} \
+        && rm -rf vim81 \
+        \
+        && tar -xjvf vim-8.1.tar.bz2 \
+        && cd vim81 \
+        && pyenv local ${DEFAULT_PY_VERSION} \
+        && ./configure \
+             --prefix=/usr/local/vim.py2 \
+             --with-features=huge \
+             --enable-cscope \
+             --enable-multibyte \
+             --enable-pythoninterp \
+             --enable-rubyinterp \
+             --enable-perlinterp \
+             --enable-luainterp \
+             --enable-tclinterp \
+             --with-luajit \
+             --enable-gui=gtk2 \
+        && make && make install \
+        && cd ${SRC_HOME} \
+        && rm -rf vim81 \
+        && rm -f vim-8.1.tar.bz2
+
+# install go binaries for vim-go
+COPY vim.conf/vimrc.go /root/.vimrc.go
+
+RUN set -ex \
+        && source /etc/profile \
+        && source /root/.gvm/scripts/gvm \
+        && gvm use go${DEFAULT_GO_VERSION} --default \
+        && export GOPATH=/tmp/go \
+        && curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+            https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
+        && /usr/local/vim.py3/bin/vim -u /root/.vimrc.go +PlugInstall! +qall \
+        \
+        && go get -u mvdan.cc/sh/cmd/shfmt \
+        && mv /tmp/go/bin/* ${SRC_HOME}/gvm/gos/go${DEFAULT_GO_VERSION}/bin \
+        \
+        && rm -rf /tmp/* /root/.cache /root/.vim*
+
+# Install dircolors
+RUN set -e \
+        && mkdir -p ${SRC_HOME}/templates/colors \
+        && git clone https://github.com/seebi/dircolors-solarized.git \
+        && mv dircolors-solarized/dircolors.256dark ${SRC_HOME}/templates/colors \
+        && echo 'eval $(SHELL=/bin/bash TERM=xterm dircolors '"${SRC_HOME}"'/templates/colors/dircolors.256dark)' >/etc/profile.d/solarized.sh \
+        \
+        && rm -rf dircolors-solarized
+
+# git configurations
+COPY templates ${SRC_HOME}/templates/
+COPY others/gitconfig /root/.gitconfig
+
+RUN set -e \
+        && git config --global color.ui true \
+        && git config --global alias.co "checkout" \
+        && git config --global alias.cm "commit -s -a" \
+        && git config --global alias.ss "status" \
+        && git config --global alias.br "branch -a" \
+        && git config --global alias.cp "cherry-pick -s -x" \
+        && git config --global alias.lr "ls-remote origin" \
+        && git config --global alias.ls "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit" \
+        && git config --global http.sslVerify false \
+        \
+        && wget --no-check-certificate -q https://raw.githubusercontent.com/petervanderdoes/gitflow-avh/develop/contrib/gitflow-installer.sh \
+        && bash gitflow-installer.sh install stable \
+        \
+        && wget -O /usr/bin/gh-md-toc https://raw.githubusercontent.com/ekalinin/github-markdown-toc/master/gh-md-toc \
+        && chmod +x /usr/bin/gh-md-toc \
+        \
+        && rm -f gitflow-installer.sh \
+        && rm -rf gitflow
+
+# install docker-client, docker-compose and dive
+ARG DOCKER_VERSION=18.09.0
+ARG DOCKER_COMPOSE_VERSION=1.23.1
+ARG DIVE_VERSION=0.5.0
+
+RUN set -e \
+        && wget https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz \
+        && tar -xvf docker-${DOCKER_VERSION}.tgz \
+        && cp -f docker/docker /usr/local/bin/ \
+        && chmod +x /usr/local/bin/docker \
+        \
+        && curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" \
+            -o /usr/local/bin/docker-compose \
+        && chmod +x /usr/local/bin/docker-compose \
+        \
+        && wget https://github.com/wagoodman/dive/releases/download/v${DIVE_VERSION}/dive_${DIVE_VERSION}_linux_amd64.deb \
+        && apt install ./dive_${DIVE_VERSION}_linux_amd64.deb \
+        \
+        && rm -rf docker* \
+        && rm -f *.deb
+
+RUN set -e \
+        && source /etc/profile \
+        && gem install mdl \
+        \
+        && npm install -g npm@4.6.1 \
+        && npm install -g prettier write-good fixjson jsonlint \
+        \
+        && pyenv local ${DEFAULT_PY3_VERSION} \
+        && pip install --no-cache-dir pudb flake8 yapf isort yamllint pynvim \
+        \
+        && pyenv local ${DEFAULT_PY_VERSION} \
+        && pip install --no-cache-dir pudb flake8 yapf isort yamllint \
+        && npm install -g bash-language-server \
+        \
+        && wget -O /usr/local/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.15.0/hadolint-Linux-x86_64 \
+        && chmod +x /usr/local/bin/hadolint \
+        \
+        && for name in $(find /var/lib/gems -name ".git*"); do rm -rf $name; done \
+        && for name in $(find /usr/lib/node_modules -name ".git*"); do rm -rf $name; done \
+        && for name in $(find ${SRC_HOME} -name "*.pyc"); do rm -rf $name; done \
+        && for name in $(find ${SRC_HOME} -name "*.pyo"); do rm -rf $name; done \
+        && for name in $(find ${SRC_HOME} -name "__pycache__"); do rm -rf $name; done \
+        && npm cache clean -f \
+        && rm -rf /tmp/* ~/.cache ~/.gem
+
+# pudb conf
+COPY others/pudb.cfg /root/.config/pudb/
+
+# scripts
+COPY profile.d ${SRC_HOME}/profile.d/
+COPY scripts ${SRC_HOME}/scripts/
+
+RUN set -e \
+        && ln -sf ${SRC_HOME}/profile.d/* /etc/profile.d/ \
+        && ln -sf ${SRC_HOME}/scripts/* /usr/local/bin/ \
+        && chmod +x ./scripts/*
+
+# entrypoint
+WORKDIR /root/workspace
+
+COPY docker/docker-entrypoint.sh /usr/local/bin/
+
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+ENTRYPOINT [ "docker-entrypoint.sh" ]
+
+CMD [ "/bin/bash" ]

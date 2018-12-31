@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Author        : Tony Bian <biantonghe@gmail.com>
+# Last Modified : 2018-12-22 21:11
+# Filename      : vim2
+
+TERM=xterm
+
+if [ -z "${VIRTUAL_ENV}" ]; then
+    source /etc/profile.d/pyenv-init.sh
+    pyenv shell ${DEFAULT_PY_VERSION}
+    /usr/local/vim.py2/bin/vim "$@"
+else
+    PY_VERSION=$(python -c "import platform; print(platform.python_version())")
+    VER=$(echo ${PY_VERSION} | awk -F '.' '{print $1}')
+    if [ "${VER}" == 3 ]; then
+        /usr/local/vim.py3/bin/vim "$@"
+    else
+        /usr/local/vim.py2/bin/vim "$@"
+    fi
+fi

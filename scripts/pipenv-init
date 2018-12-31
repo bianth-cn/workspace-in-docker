@@ -1,0 +1,109 @@
+#!/bin/bash
+
+# Author        : Tony Bian <biantonghe@gmail.com>
+# Last Modified : 2018-12-22 21:00
+# Filename      : pipenv-init
+
+set -e
+
+PROJECT_NAME=$1
+PY_VERSION=$2
+
+WORKSPACE=/root/workspace
+PROJECT_BASE=${WORKSPACE}/py-projects
+
+if [[ -n ${VIRTUAL_ENV} ]]; then
+    echo "请先使用exit命令退出当前虚拟环境!"
+    echo
+    exit 1
+fi
+
+function usage() {
+    echo "说明:"
+    echo "    初始化python项目, 并进入项目的虚拟环境"
+    echo "    当选择未安装的python版本时, 将自动使用pyenv安装"
+    echo
+    echo "用法:"
+    echo "    pe-i <project_name> [py_version]"
+    echo
+    echo "参数说明:"
+    echo "    project_name: 项目名称"
+    echo -e "    py_version:   python版本, 可选参数, 默认使用\e[34m${DEFAULT_PY3_VERSION}\e[0m"
+    echo
+    echo "已安装的python版本:"
+
+    for i in $(ls /root/.pyenv/versions | egrep "^[0-9]\.[0-9]\.[0-9]{1,2}$"); do
+        if [[ ${i} == ${DEFAULT_PY3_VERSION} ]]; then
+            echo -e "    \e[34m${i}\e[0m"
+        elif [[ ${i} == ${DEFAULT_PY_VERSION} ]]; then
+            echo -e "    \e[33m${i}\e[0m"
+        else
+            echo "    ${i}"
+        fi
+    done
+
+    echo
+    exit 1
+}
+
+if [[ $# -gt 2 || $# -lt 1 ]]; then
+    usage
+fi
+
+if [[ -z ${PY_VERSION} ]]; then
+    PY_VERSION=${DEFAULT_PY3_VERSION}
+fi
+
+if [[ ! ${PY_VERSION} =~ ^([0-9].[0-9].[0-9]{1,2})$ ]]; then
+    usage
+fi
+
+PROJECT_HOME=${PROJECT_BASE}/${PY_VERSION}/${PROJECT_NAME}
+
+if [[ -d ${PROJECT_HOME} ]]; then
+    echo "项目 ${PY_VERSION}/${PROJECT_NAME} 已存在!"
+    echo "virtual_env path: ${PROJECT_HOME}"
+    echo
+    exit 1
+fi
+
+export PIPENV_VENV_IN_PROJECT=1
+mkdir -p ${PROJECT_HOME} && cd ${PROJECT_HOME}
+pipenv --python ${PY_VERSION} || rm -rf ${PROJECT_HOME}
+sed -i 's#^url = .*#url = "http://mirrors.aliyun.com/pypi/simple/"#g' Pipfile
+
+cat >>${PROJECT_HOME}/.venv/bin/activate <<PS
+
+PY_VERSION=${PY_VERSION}
+
+# 设置全局变量PY, 用于vim启动时添加virtual env到path中, 详见~/.vimrc中的配置
+export PY=$(echo ${PY_VERSION} | awk -F '.' '{print $1}').$(echo ${PY_VERSION} | awk -F '.' '{print $2}')
+
+VER=$(echo ${PY_VERSION} | awk -F '.' '{print $1}')
+V_ENV=$(echo ${PROJECT_HOME} | awk -F '/' '{print $NF}')
+if [ "\$VER" == 3 ]; then
+    PS1='[py][\e[34m\$PY_VERSION\e[0m](\e[37m\$V_ENV\e[0m)[\W]\e[36m$\e[0m '
+else
+    PS1='[py][\e[33m\$PY_VERSION\e[0m](\e[37m\$V_ENV\e[0m)[\W]\e[36m$\e[0m '
+fi
+
+HOME=${PROJECT_HOME}
+PS
+
+PY_VER=$(echo ${PY_VERSION} | awk -F '.' '{print $1}')
+
+if [ "${PY_VER}" = 2 ]; then
+    pipenv install --dev pudb ipython==5.8.0
+else
+    pipenv install --dev pudb ipython pynvim
+fi
+
+cp ${SRC_HOME}/templates/gitignore/python ./.gitignore
+git flow init -d >/dev/null
+
+for dir in $(find /root -maxdepth 1 -name ".*" ! -name ".gvm" ! -name ".pyenv" ! -name ".wget-hsts"); do
+    relative_dir=$(echo ${dir} | awk -F '/' '{print $NF}')
+    ln -sf ${dir} ${PROJECT_HOME}/${relative_dir}
+done
+
+SHELL=/bin/bash pipenv shell

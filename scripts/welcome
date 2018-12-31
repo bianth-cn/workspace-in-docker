@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# Author        : Tony Bian <biantonghe@gmail.com>
+# Last Modified : 2018-12-07 17:13
+# Filename      : welcome
+
+echo -e "
+                                           \e[36m##\e[0m        \e[34m.\e[0m
+                                     \e[36m## ## ##\e[0m       \e[34m==\e[0m
+                                  \e[36m## ## ## ##\e[0m      \e[34m===\e[0m
+                              \e[34m/""""""""""""""""___/ ===\e[0m
+                         \e[34m~~~ {~~ ~~~~ ~~~ ~~~~ ~~ ~ /  ===- ~~~\e[0m
+                              \e[34m\______\e[0m o          \e[34m__/\e[0m
+                               \   \e[34m\        __/\e[0m
+                                 \____\e[34m\______/\e[0m
+
+                             \e[33m欢迎来到Tony的工作空间\e[0m
+
+这是什么？
+  - 使用docker封装的workspace，包含vim-ide以及常用工具集
+  - 支持python、go、shell等语言的代码高亮, 语法检查，格式化, 自动补全, 查看文档、定义、引用, 以及REPL等功能
+  - 支持markdown、json、yaml、Dockerfile等文本格式的代码高亮, 语法检查，格式化等功能
+
+这里有什么？
+  - 预装了pyenv、pipenv、python2.7、python3.6的python开发环境
+  - 预装了gvm、glide、go1.10的go开发环境
+  - 基于k-vim做了大量扩展和调整的vim-ide
+  - 支持切换SpaceVim作为vim-ide的配置
+  - 支持使用自定义配置作为vim-ide的配置
+  - 预装了docker-client、docker-compose、docker-tags、dive等docker管理工具
+  - 预装了git、git-flow等代码版本及工作流程管理工具
+  - 对以上工具进行了封装，实现项目隔离、规范项目目录结构及简化开发流程
+  - 预装了常用的linux系统工具、网络工具和包管理工具.
+
+命令行工具：
+  - \e[34mws\e[0m         workspace管理入口
+  - \e[34mpye\e[0m        python开发任务相关命令入口
+  - \e[34mgoe\e[0m        go开发任务相关命令入口
+  - \e[34mgite\e[0m       git相关命令入口
+  - \e[34mgh-md-toc\e[0m  对gh-md-toc的封装, 可对指定目录下的所有markdown格式文件生成TOC
+  - \e[34mvimdiff\e[0m    对vimdiff及vim-dirdiff的封装, 可比对指定目录的差异
+  - \e[34mguide\e[0m      查看使用手册(施工中……)
+  - \e[34mwelcome\e[0m    查看欢迎界面
+
+项目地址：
+  - https://github.com/TonyBian/workspace-in-docker.git
+"

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [ $# -ne 2 ]; then
+    echo "usage: lgit {.|<filename>} <comment>"
+    echo
+else
+    git add --all $1
+    git commit -s -a -m "$2"
+    git push origin --all
+fi

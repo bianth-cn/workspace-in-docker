@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# Author        : Tony Bian <biantonghe@gmail.com>
+# Last Modified : 2018-12-16 18:34
+# Filename      : vimdiff
+
+TERM=xterm
+
+function usage() {
+    echo "Usage:"
+    echo
+    echo "    vimdiff file1 file2 [fileN]"
+    echo
+    echo "    or"
+    echo
+    echo "    vimdiff dir1 dir2"
+    echo
+    exit 1
+}
+
+function filediff() {
+    if [[ $# -lt 2 ]]; then
+        usage
+    fi
+
+    for i in "$@"; do
+        if [[ ! -f $i ]]; then
+            usage
+        fi
+    done
+
+    /usr/local/vim.py3/bin/vimdiff "$@"
+}
+
+function dirdiff() {
+    if [[ $# -ne 2 ]]; then
+        usage
+    fi
+
+    for i in "$@"; do
+        if [[ ! -d $i ]]; then
+            usage
+        fi
+    done
+
+    /usr/local/vim.py3/bin/vim +'DirDiff '"$1"' '"$2"''
+}
+
+if [[ -f $1 ]]; then
+    filediff "$@"
+elif [[ -d $1 ]]; then
+    dirdiff "$@"
+else
+    usage
+fi
