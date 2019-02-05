@@ -155,6 +155,9 @@ RUN set -e \
 # pudb conf
 COPY others/pudb.cfg /root/.config/pudb/
 
+# yamllint conf
+COPY others/yamllint/config /root/.config/yamllint/config
+
 # scripts
 COPY profile.d ${SRC_HOME}/profile.d/
 COPY scripts ${SRC_HOME}/scripts/

@@ -520,6 +520,8 @@ func! AddTitle()
   echohl WarningMsg | echo "Successful in adding the copyright." | echohl None
 endfunction
 
+nnoremap <leader>a:silent! call AddTitle()<cr>
+
 autocmd BufWritePre,FileWritePre *.sh,*.py,*.go exec ":call UpdateTitle()"
 func! UpdateTitle()
   let n = 1

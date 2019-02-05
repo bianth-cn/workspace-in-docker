@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Author        : Tony Bian <biantonghe@gmail.com>
+# Last Modified : 2019-02-02 12:27
+# Filename      : mysql.sh
+
+docker run \
+    -it --rm \
+    mysql:5.7 \
+    mysql "$@"

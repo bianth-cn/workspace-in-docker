@@ -3,6 +3,7 @@ export TERM=dumb
 
 alias ls='TERM=xterm ls --color=auto'
 alias ll='ls -lF'
+alias ssh='TERM=xterm ssh'
 
 stty erase ^h
 stty erase ^?

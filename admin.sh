@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Author        : Tony Bian <biantonghe@gmail.com>
-# Last Modified : 2018-12-31 09:53
+# Last Modified : 2019-01-05 14:42
 # Filename      : admin.sh
 
 DIRNAME=$(
@@ -72,7 +72,7 @@ function usage() {
     ${ECHO}
     ${ECHO} "说明:"
     ${ECHO}
-    ${ECHO} "    管理workspace的工具, workspace分为HOST、DEV、VENV、FAT四层:"
+    ${ECHO} "    workspace工具管理, workspace分为HOST、DEV、VENV、FAT四层:"
     ${ECHO}
     ${ECHO} "    HOST         dockerd运行环境, workspace最底层"
     ${ECHO} "    DEV          开发专用环境, 在${white}HOST${normal}中使用 \"ws dev [proxy]\" 命令进入"

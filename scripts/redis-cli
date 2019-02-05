@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Author        : Tony Bian <biantonghe@gmail.com>
+# Last Modified : 2019-02-02 12:33
+# Filename      : redis-cli.sh
+
+docker run \
+    -it --rm \
+    redis \
+    redis-cli "$@"

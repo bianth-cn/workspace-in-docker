@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Author        : Tony Bian <biantonghe@gmail.com>
+# Last Modified : 2019-01-16 14:17
+# Filename      : hostpwd.sh
+
+WORKSPACE=$(docker inspect -f '{{println}}{{range .Mounts}}{{.Source}} {{.Destination}}{{println}}{{end}}' $(hostname) | grep /root/workspace | awk '{print $1}')
+
+TEMP_PATH=$(echo $PWD | awk -F "/" '{x=4;while(x<=NF){printf "%s/", $x;x++;}printf "\n"}' | sed 's/.$//')
+
+HOST_PATH=${WORKSPACE}/${TEMP_PATH}
+
+echo ${HOST_PATH}

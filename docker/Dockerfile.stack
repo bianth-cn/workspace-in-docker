@@ -91,9 +91,11 @@ RUN set -e \
         && apt-get install -y --no-install-recommends \
             man-db manpages \
             \
-            bash-completion sysstat inetutils-ping net-tools telnet dnsutils traceroute tcpdump tree dos2unix unzip expect \
+            bash-completion sysstat tree dos2unix unzip expect ldap-utils \
+            inetutils-ping net-tools telnet dnsutils traceroute tcpdump mtr \
         \
         && rm -rf /var/lib/apt/lists/*
 
 RUN echo 'source /etc/profile' >>/root/.bashrc \
-        && echo 'unset GOPATH' >>/root/.bashrc
+        && echo 'unset GOPATH' >>/root/.bashrc \
+        && sed -i 's/^SendEnv LANG LC_*$/# SendEnv LANG LC_*/g' /etc/ssh/ssh_config
