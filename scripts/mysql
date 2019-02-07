@@ -7,4 +7,5 @@
 docker run \
     -it --rm \
     mysql:5.7 \
-    mysql "$@"
+    mysql --connect-timeout=5 \
+    "$@"

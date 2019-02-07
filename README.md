@@ -194,3 +194,4 @@ nnoremap tm :call OpenTerminal()<cr>
 
   - 由`syntax`导致, 详见[Syntax highlighting causes terrible lag in Vim](https://stackoverflow.com/questions/19030290/syntax-highlighting-causes-terrible-lag-in-vim)
   - 最佳实践是少用`hjkl`, 多用其他更高效的光标移动方法
+> 段落引用

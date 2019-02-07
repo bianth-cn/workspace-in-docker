@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Author        : Tony Bian <biantonghe@gmail.com>
+# Last Modified : 2019-02-06 16:51
+# Filename      : mysqldroptables.sh
+
+DB_HOST=$1
+DB_USER=$2
+DB_PASS=$3
+DB_NAME=$4
+
+if [[ $# != 4 ]]; then
+    echo "Usage: $0 <DB_HOST> <DB_USER> <DB_PASS> <DB_NAME>"
+    echo
+    exit 1
+fi
+
+TABLES=$(mysql -u${DB_USER} -p${DB_PASS} -h${DB_HOST} ${DB_NAME} -BNe 'show tables' | awk '{ print $1}')
+
+for t in ${TABLES}; do
+    mysql -u${DB_USER} -p${DB_PASS} -h${DB_HOST} ${DB_NAME} -e "drop table $t"
+    echo drop table $t
+done

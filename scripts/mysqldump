@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# Author        : Tony Bian <biantonghe@gmail.com>
+# Last Modified : 2019-02-04 21:49
+# Filename      : mysqldump.sh
+
+COMMAND=$1
+DB_HOST=$2
+DB_USER=$3
+DB_PASS=$4
+DB_NAME=$5
+
+host_pwd=$(hostpwd)
+
+function export() {
+    docker run \
+        --rm \
+        -v ${host_pwd}/export:/mysqldump \
+        -e DB_NAME=${DB_NAME} \
+        -e DB_PASS=${DB_PASS} \
+        -e DB_USER=${DB_USER} \
+        -e DB_HOST=${DB_HOST} \
+        tonybian/mysqldump
+}
+
+function import() {
+    docker run \
+        --rm \
+        -v ${host_pwd}/export:/mysqldump \
+        --entrypoint /import.sh \
+        -e DB_NAME=${DB_NAME} \
+        -e DB_PASS=${DB_PASS} \
+        -e DB_USER=${DB_USER} \
+        -e DB_HOST=${DB_HOST} \
+        tonybian/mysqldump
+}
+
+case ${COMMAND} in
+    export)
+        export
+        ;;
+    import)
+        import
+        ;;
+    *)
+        echo "Usage: $0 {export|import} <DB_HOST> <DB_USER> <DB_PASS> <DB_NAME>"
+        echo
+        ;;
+esac
