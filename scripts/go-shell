@@ -6,7 +6,6 @@
 
 set -e
 
-WORKSPACE=/root/workspace
 PROJECT_BASE=${WORKSPACE}/go-projects
 
 if [[ -n ${VIRTUAL_ENV} ]]; then

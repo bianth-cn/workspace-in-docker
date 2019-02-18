@@ -9,7 +9,6 @@ set -e
 PROJECT_NAME=$1
 PY_VERSION=$2
 
-WORKSPACE=/root/workspace
 PROJECT_BASE=${WORKSPACE}/py-projects
 
 if [[ -n ${VIRTUAL_ENV} ]]; then

@@ -1,1 +1,1 @@
-bash /root/workspace/workspace-in-docker/admin.sh "$@"
+bash ${WORKSPACE}/workspace-in-docker/admin.sh "$@"

@@ -4,10 +4,14 @@
 # Last Modified : 2019-01-16 14:17
 # Filename      : hostpwd.sh
 
-WORKSPACE=$(docker inspect -f '{{println}}{{range .Mounts}}{{.Source}} {{.Destination}}{{println}}{{end}}' $(hostname) | grep /root/workspace | awk '{print $1}')
+WORKSPACE=$(docker inspect -f '{{println}}{{range .Mounts}}{{.Source}} {{.Destination}}{{println}}{{end}}' $(hostname) | grep -e "/workspace$" | awk '{print $1}')
 
-TEMP_PATH=$(echo $PWD | awk -F "/" '{x=4;while(x<=NF){printf "%s/", $x;x++;}printf "\n"}' | sed 's/.$//')
+CURRENT=$(pwd | awk -F "/" '{print $NF}')
 
-HOST_PATH=${WORKSPACE}/${TEMP_PATH}
+if [[ ${PWD} == ${WORKSPACE} ]]; then
+    HOST_PATH=${WORKSPACE}
+else
+    HOST_PATH=${WORKSPACE}/${CURRENT}
+fi
 
 echo ${HOST_PATH}

@@ -158,6 +158,15 @@ COPY others/pudb.cfg /root/.config/pudb/
 # yamllint conf
 COPY others/yamllint/config /root/.config/yamllint/config
 
+# extention
+# Install extend system tools
+RUN set -e \
+        && apt-get update \
+        && apt-get install -y --no-install-recommends \
+            zip \
+        \
+        && rm -rf /var/lib/apt/lists/*
+
 # scripts
 COPY profile.d ${SRC_HOME}/profile.d/
 COPY scripts ${SRC_HOME}/scripts/

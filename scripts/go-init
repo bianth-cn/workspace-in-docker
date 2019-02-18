@@ -9,7 +9,6 @@ set -e
 PROJECT_NAME=$1
 GO_VERSION=$2
 
-WORKSPACE=/root/workspace
 PROJECT_BASE=${WORKSPACE}/go-projects
 
 GO_VERSIONS=$(ls ${GVM_ROOT}/gos | egrep "^go[0-9]\.[0-9]{1,2}\.[0-9]{1,2}$")
@@ -105,7 +104,7 @@ expect eof
 ' >/dev/null
 
 cat >${PROJECT_HOME}/.venv <<EOF
-HOME=${PROJECT_HOME}
+HOME=\${WORKSPACE}/go-projects/${GO_VERSION}/${PROJECT_NAME}
 cd \${HOME}
 source ${GVM_ROOT}/scripts/gvm
 gvm use go${GO_VERSION}

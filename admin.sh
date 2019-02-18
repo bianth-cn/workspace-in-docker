@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Author        : Tony Bian <biantonghe@gmail.com>
-# Last Modified : 2019-01-05 14:42
+# Last Modified : 2019-02-18 10:36
 # Filename      : admin.sh
 
 DIRNAME=$(
@@ -64,7 +64,7 @@ if [[ ! $(hostname) =~ ^(${DEV_CONTAINER_NAME_WITH_PROXY}|${DEV_CONTAINER_NAME})
 else
     WORKSPACE=$(docker inspect -f \
         '{{println}}{{range .Mounts}}{{.Source}} {{.Destination}}{{println}}{{end}}' \
-        $(hostname) | grep /root/workspace | awk '{print $1}')
+        $(hostname) | grep -e "workspace$" | awk '{print $1}')
     ECHO='echo -e'
 fi
 
@@ -124,6 +124,10 @@ function usage() {
 if [[ $# -gt 2 ]]; then
     usage
 fi
+
+function goto() {
+    cd ${WORKSPACE}
+}
 
 function download_font() {
     url="https://raw.githubusercontent.com/wsdjeg/DotFiles/master/local/share/fonts/$1"
@@ -346,6 +350,7 @@ function dev() {
             ${HTTPS_PROXY} \
             -e TZ=${TZ} \
             -e IDE_CONF=${IDE_CONF} \
+            -e WORKSPACE=${WORKSPACE} \
             -e USER_NAME="'${USER_NAME}'" \
             -e USER_EMAIL=${USER_EMAIL} \
             -e GIT_PUSH_DEFAULT=${GIT_PUSH_DEFAULT} \
@@ -355,7 +360,7 @@ function dev() {
             ${HARBOR:+-v /etc/docker/certs.d/${HARBOR}:/etc/docker/certs.d/${HARBOR}:ro} \
             -v ${SSH_KEY}:/root/.ssh \
             -v ~/.bash_history:/root/.bash_history \
-            -v ${WORKSPACE}:/root/workspace \
+            -v ${WORKSPACE}:${WORKSPACE} \
             -v ${WORKSPACE}/.pyenv/versions:/root/.pyenv/versions \
             -v ${WORKSPACE}/.gvm/gos:/root/.gvm/gos \
             ${spacevim:+-v ${WORKSPACE}/.cache/vimfiles:/root/.cache/vimfiles} \
@@ -365,6 +370,7 @@ function dev() {
             ${kvim:+-v ${WORKSPACE}/${WS_NAME}/vim.conf/k-vim/vimrc.bundles:/root/.vimrc.bundles} \
             ${kvim:+-v ${WORKSPACE}/.vim:/root/.vim} \
             ${custom:+${volumes}} \
+            -w ${WORKSPACE} \
             -d ${DEV_DOCKER_IMAGE} \
             >/dev/null &&
             docker exec -it ${CONTAINER_NAME} /bin/bash -c "welcome && exec /bin/bash"
@@ -408,6 +414,9 @@ function push() {
 }
 
 case $1 in
+    goto)
+        goto
+        ;;
     init)
         if [[ $(hostname) =~ ^(${DEV_CONTAINER_NAME_WITH_PROXY}|${DEV_CONTAINER_NAME})$ ]]; then
             ${ECHO} "${yellow}You are already in ${white}DEV workspace${yellow} \"$(hostname)\", ignore init.${normal}"
