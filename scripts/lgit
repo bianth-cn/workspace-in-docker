@@ -6,5 +6,6 @@ if [ $# -ne 2 ]; then
 else
     git add --all $1
     git commit -s -a -m "$2"
-    git push origin --all
+    git push --all
+    git push --tags
 fi

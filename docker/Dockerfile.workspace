@@ -108,8 +108,6 @@ RUN set -e \
 
 # install docker-client, docker-compose and dive
 ARG DOCKER_VERSION=18.09.0
-ARG DOCKER_COMPOSE_VERSION=1.23.1
-ARG DIVE_VERSION=0.5.0
 
 RUN set -e \
         && wget https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz \
@@ -117,6 +115,12 @@ RUN set -e \
         && cp -f docker/docker /usr/local/bin/ \
         && chmod +x /usr/local/bin/docker \
         \
+        && rm -rf docker*
+
+ARG DOCKER_COMPOSE_VERSION=1.23.1
+ARG DIVE_VERSION=0.6.0
+
+RUN set -e \
         && curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" \
             -o /usr/local/bin/docker-compose \
         && chmod +x /usr/local/bin/docker-compose \
@@ -124,20 +128,25 @@ RUN set -e \
         && wget https://github.com/wagoodman/dive/releases/download/v${DIVE_VERSION}/dive_${DIVE_VERSION}_linux_amd64.deb \
         && apt install ./dive_${DIVE_VERSION}_linux_amd64.deb \
         \
-        && rm -rf docker* \
         && rm -f *.deb
 
 RUN set -e \
         && source /etc/profile \
+        && /usr/bin/pip2 install --no-cache-dir setuptools \
+        && /usr/bin/pip2 install --no-cache-dir python-jenkins lxml \
+        \
         && gem install mdl \
         \
         && npm install -g npm@4.6.1 \
         && npm install -g prettier write-good fixjson jsonlint \
         \
         && pyenv local ${DEFAULT_PY3_VERSION} \
+        && pip install --no-cache-dir --upgrade pip \
         && pip install --no-cache-dir pudb flake8 yapf isort yamllint pynvim \
+            ansible docker openshift jmespath \
         \
         && pyenv local ${DEFAULT_PY_VERSION} \
+        && pip install --no-cache-dir --upgrade pip \
         && pip install --no-cache-dir pudb flake8 yapf isort yamllint \
         && npm install -g bash-language-server \
         \
@@ -152,20 +161,14 @@ RUN set -e \
         && npm cache clean -f \
         && rm -rf /tmp/* ~/.cache ~/.gem
 
+# ansible conf
+COPY others/ansible.cfg /etc/ansible/
+
 # pudb conf
 COPY others/pudb.cfg /root/.config/pudb/
 
 # yamllint conf
 COPY others/yamllint/config /root/.config/yamllint/config
-
-# extention
-# Install extend system tools
-RUN set -e \
-        && apt-get update \
-        && apt-get install -y --no-install-recommends \
-            zip \
-        \
-        && rm -rf /var/lib/apt/lists/*
 
 # scripts
 COPY profile.d ${SRC_HOME}/profile.d/

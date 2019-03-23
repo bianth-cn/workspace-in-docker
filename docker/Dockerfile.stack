@@ -20,7 +20,7 @@ RUN set -e \
         && sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list \
         && apt-get update \
         && apt-get install -y --no-install-recommends \
-            apt-utils build-essential bison tk-dev \
+            apt-utils build-essential bison tk-dev python-pip \
         \
         && rm -rf /var/lib/apt/lists/*
 
@@ -91,8 +91,8 @@ RUN set -e \
         && apt-get install -y --no-install-recommends \
             man-db manpages \
             \
-            bash-completion sysstat tree dos2unix unzip expect ldap-utils \
-            inetutils-ping net-tools telnet dnsutils traceroute tcpdump mtr \
+            bash-completion sysstat tree dos2unix zip unzip expect ldap-utils \
+            inetutils-ping net-tools telnet dnsutils netcat traceroute tcpdump mtr \
         \
         && rm -rf /var/lib/apt/lists/*
 

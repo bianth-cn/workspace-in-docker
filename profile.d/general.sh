@@ -6,5 +6,8 @@ alias ll='ls -lF'
 alias ssh='TERM=xterm ssh'
 alias cdws="cd ${WORKSPACE}"
 
+alias ansible="TERM=xterm ansible"
+alias ansible-playbook="TERM=xterm ansible-playbook"
+
 stty erase ^h
 stty erase ^?

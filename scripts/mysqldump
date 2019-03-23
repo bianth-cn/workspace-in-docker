@@ -10,12 +10,10 @@ DB_USER=$3
 DB_PASS=$4
 DB_NAME=$5
 
-host_pwd=$(hostpwd)
-
 function export() {
     docker run \
         --rm \
-        -v ${host_pwd}/export:/mysqldump \
+        -v ${PWD}/export:/mysqldump \
         -e DB_NAME=${DB_NAME} \
         -e DB_PASS=${DB_PASS} \
         -e DB_USER=${DB_USER} \
@@ -26,7 +24,7 @@ function export() {
 function import() {
     docker run \
         --rm \
-        -v ${host_pwd}/export:/mysqldump \
+        -v ${PWD}/export:/mysqldump \
         --entrypoint /import.sh \
         -e DB_NAME=${DB_NAME} \
         -e DB_PASS=${DB_PASS} \
