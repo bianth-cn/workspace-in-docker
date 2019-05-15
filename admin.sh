@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Author        : Tony Bian <biantonghe@gmail.com>
-# Last Modified : 2019-03-24 11:01
+# Last Modified : 2019-05-15 12:53
 # Filename      : admin.sh
 
 DIRNAME=$(
@@ -53,7 +53,7 @@ if [[ ! $(hostname) =~ ^(${DEV_CONTAINER_NAME_WITH_PROXY}|${DEV_CONTAINER_NAME})
         SSH_KEY=/Users/$(whoami)/.ssh
         ECHO='echo -e'
         INTERFACE=en0
-        IP="$(ifconfig | grep -A2 ${INTERFACE} | grep " broadcast " | awk -F "[inet ]+" '{print $2}')"
+        IP="$(ifconfig | grep -A3 ${INTERFACE} | grep " broadcast " | awk -F "[inet ]+" '{print $2}')"
     else
         WORKSPACE=/home/$(whoami)/workspace
         SSH_KEY=/home/$(whoami)/.ssh

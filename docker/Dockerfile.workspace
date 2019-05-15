@@ -67,7 +67,6 @@ RUN set -ex \
         && curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
             https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
         && /usr/local/vim.py3/bin/vim -u /root/.vimrc.go +PlugInstall! +qall \
-        \
         && go get -u mvdan.cc/sh/cmd/shfmt \
         && mv /tmp/go/bin/* ${SRC_HOME}/gvm/gos/go${DEFAULT_GO_VERSION}/bin \
         \

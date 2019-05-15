@@ -177,8 +177,6 @@ set showmatch
 " How many tenths of a second to blink when matching brackets
 set matchtime=1
 
-set re=1
-
 " 设置文内智能搜索提示
 " 高亮search命中的文本
 set hlsearch
@@ -314,7 +312,7 @@ endif
 " F1 - F6 设置
 
 " F1 行号开关，用于鼠标复制代码用
-" 为方便复制，用<F2>开启/关闭行号显示:
+" 为方便复制，用<F1>开启/关闭行号显示:
 function! HideNumber()
 if(&relativenumber == &number)
 set relativenumber! number!
