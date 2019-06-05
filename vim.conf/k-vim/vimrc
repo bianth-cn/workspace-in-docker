@@ -580,17 +580,15 @@ highlight clear LineNr
 if has('nvim')
   fu! OpenTerminal()
    " open split windows on the topleft
-   topleft split
+   vsplit
    " resize the height of terminal windows to 30
-   resize 13
    :terminal
   endf
 else
   fu! OpenTerminal()
    " open split windows on the topleft
-   topleft split
+   vsplit
    " resize the height of terminal windows to 30
-   resize 13
    :call term_start('bash', {'curwin' : 1, 'term_finish' : 'close'})
   endf
 endif

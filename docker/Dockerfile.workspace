@@ -142,7 +142,7 @@ RUN set -e \
         && pyenv local ${DEFAULT_PY3_VERSION} \
         && pip install --no-cache-dir --upgrade pip \
         && pip install --no-cache-dir pudb flake8 yapf isort yamllint pynvim \
-            ansible docker openshift jmespath \
+            ansible docker openshift jmespath python-consul \
         \
         && pyenv local ${DEFAULT_PY_VERSION} \
         && pip install --no-cache-dir --upgrade pip \
