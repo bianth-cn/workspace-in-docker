@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# Author        : Tony Bian <biantonghe@gmail.com>
+# Last Modified : 2019-10-23 18:36
+# Filename      : k9s.sh
+
+KUBE_CONFIG_ROOT=/Users/tonybian/workspace/ops/devops/credentials/kubernetes
+
+K8S_CLUSTER_NAME=$1
+K8S_CLUSTERS=($(cd ${KUBE_CONFIG_ROOT} && find . -maxdepth 1 -type d | awk -F './' '{print $2}'))
+
+function usage() {
+    echo
+    echo "Usage: $0 <k8s_cluster_name>"
+    echo
+    echo "the k8s_clusters are:"
+    echo
+    for name in "${K8S_CLUSTERS[@]}"; do
+        echo "    ${name}"
+    done
+    echo
+    exit 1
+}
+
+if [[ $# -ne 1 ]]; then
+    usage
+fi
+
+if [[ ! ${K8S_CLUSTERS[*]} =~ ${K8S_CLUSTER_NAME} ]]; then
+    usage
+fi
+
+TERM=xterm docker run -it --rm -v ${KUBE_CONFIG_ROOT}/${K8S_CLUSTER_NAME}/kubeconfig:/root/.kube/config derailed/k9s

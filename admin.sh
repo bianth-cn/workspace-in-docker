@@ -345,6 +345,7 @@ function dev() {
             -it \
             --name ${CONTAINER_NAME} \
             --hostname ${CONTAINER_NAME} \
+            --network host \
             --restart=always \
             ${HTTP_PROXY} \
             ${HTTPS_PROXY} \

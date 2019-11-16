@@ -233,17 +233,17 @@ set nrformats=
 " set relativenumber number
 " au FocusLost * :set norelativenumber number
 " au FocusGained * :set relativenumber
-" 插入模式下用绝对行号, 普通模式下用相对
-" autocmd InsertEnter * :set norelativenumber number
-" autocmd InsertLeave * :set relativenumber
-" function! NumberToggle()
-" if(&relativenumber == 1)
-" set norelativenumber number
-" else
-" set relativenumber
-" endif
-" endfunc
-"nnoremap <C-n> :call NumberToggle()<cr>
+" " 插入模式下用绝对行号, 普通模式下用相对
+"  autocmd InsertEnter * :set norelativenumber number
+"  autocmd InsertLeave * :set relativenumber
+"  function! NumberToggle()
+"  if(&relativenumber == 1)
+"  set norelativenumber number
+"  else
+"  set relativenumber
+"  endif
+"  endfunc
+" nnoremap <C-n> :call NumberToggle()<cr>
 
 "==========================================
 " FileEncode Settings 文件编码,格式
@@ -603,7 +603,7 @@ if &filetype == 'sh'
 elseif &filetype == 'python'
   exec "!bash -c 'time python %'"
 elseif &filetype == 'go'
-  exec "!go build %<"
+  exec "!go build %"
   exec "!bash -c 'time go run %'"
 elseif &filetype == 'html'
   exec "!export DISPLAY=localhost:10.0 && firefox % &"
