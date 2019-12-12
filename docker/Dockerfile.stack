@@ -3,9 +3,9 @@ FROM buildpack-deps:bionic
 # https://stackoverflow.com/questions/20635472/using-the-run-instruction-in-a-dockerfile-with-source-does-not-work
 SHELL ["/bin/bash", "-c"]
 
-ENV DEFAULT_PY_VERSION=2.7.16 \
-    DEFAULT_PY3_VERSION=3.6.8 \
-    DEFAULT_GO_VERSION=1.10.8
+ENV DEFAULT_PY_VERSION=2.7.17 \
+    DEFAULT_PY3_VERSION=3.7.5 \
+    DEFAULT_GO_VERSION=1.13.5
 
 ENV LANG=C.UTF-8 \
     LC_ALL=C.UTF-8 \

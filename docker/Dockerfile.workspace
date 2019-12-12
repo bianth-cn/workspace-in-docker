@@ -117,7 +117,7 @@ RUN set -e \
         && rm -rf docker*
 
 ARG DOCKER_COMPOSE_VERSION=1.23.1
-ARG DIVE_VERSION=0.6.0
+ARG DIVE_VERSION=0.9.1
 
 RUN set -e \
         && curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" \
