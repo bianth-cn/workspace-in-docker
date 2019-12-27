@@ -6,7 +6,7 @@ endif
 call plug#begin('~/.vim/bundle')
 
 if count(g:bundle_groups, 'go')
-    Plug 'fatih/vim-go', { 'do': ':silent GoInstallBinaries' }
+    Plug 'fatih/vim-go', { 'do': ':silent GoUpdateBinaries' }
 endif
 
 call plug#end()

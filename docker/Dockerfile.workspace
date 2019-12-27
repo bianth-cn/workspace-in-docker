@@ -106,7 +106,7 @@ RUN set -e \
         && rm -rf gitflow
 
 # install docker-client, docker-compose and dive
-ARG DOCKER_VERSION=18.09.0
+ARG DOCKER_VERSION=19.03.5
 
 RUN set -e \
         && wget https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz \
@@ -116,7 +116,7 @@ RUN set -e \
         \
         && rm -rf docker*
 
-ARG DOCKER_COMPOSE_VERSION=1.23.1
+ARG DOCKER_COMPOSE_VERSION=1.25.0
 ARG DIVE_VERSION=0.9.1
 
 RUN set -e \
@@ -128,6 +128,9 @@ RUN set -e \
         && apt install ./dive_${DIVE_VERSION}_linux_amd64.deb \
         \
         && rm -f *.deb
+
+COPY docker/requirements.py3 ${SRC_HOME}/requirements.py3
+COPY docker/requirements.py ${SRC_HOME}/requirements.py
 
 RUN set -e \
         && source /etc/profile \
@@ -141,12 +144,11 @@ RUN set -e \
         \
         && pyenv local ${DEFAULT_PY3_VERSION} \
         && pip install --no-cache-dir --upgrade pip \
-        && pip install --no-cache-dir pudb flake8 yapf isort yamllint pynvim \
-            ansible docker openshift jmespath python-consul \
+        && pip install --no-cache-dir -r ${SRC_HOME}/requirements.py3 \
         \
         && pyenv local ${DEFAULT_PY_VERSION} \
         && pip install --no-cache-dir --upgrade pip \
-        && pip install --no-cache-dir pudb flake8 yapf isort yamllint \
+        && pip install --no-cache-dir -r ${SRC_HOME}/requirements.py \
         && npm install -g bash-language-server \
         \
         && wget -O /usr/local/bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.15.0/hadolint-Linux-x86_64 \

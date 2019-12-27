@@ -94,7 +94,7 @@ PY_VER=$(echo ${PY_VERSION} | awk -F '.' '{print $1}')
 if [ "${PY_VER}" = 2 ]; then
     pipenv install --dev pudb ipython==5.8.0
 else
-    pipenv install --dev pudb ipython pynvim
+    pipenv install --dev pudb ipython==7.6.0 pynvim==0.3.2
 fi
 
 cp ${SRC_HOME}/templates/gitignore/python ./.gitignore
