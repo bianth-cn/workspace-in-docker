@@ -41,12 +41,12 @@ RUN set -e \
         && PYTHON_CONFIGURE_OPTS="--build=$gnuArch --enable-shared --enable-unicode=ucs4" \
              pyenv local ${DEFAULT_PY_VERSION} \
         && pip install --no-cache-dir pip --upgrade \
-        && pip install --no-cache-dir pipenv==2018.5.18 ipython \
+        && pip install --no-cache-dir pipenv==2018.5.18 ipython==5.8.0 \
         \
         && PYTHON_CONFIGURE_OPTS="--build=$gnuArch --enable-loadable-sqlite-extensions --enable-shared --with-system-expat --with-system-ffi --without-ensurepip" \
              pyenv local ${DEFAULT_PY3_VERSION} \
         && pip install --no-cache-dir pip --upgrade \
-        && pip install --no-cache-dir pipenv==2018.5.18 ipython \
+        && pip install --no-cache-dir pipenv==2018.5.18 ipython==7.6.0 \
         \
         && mkdir -p ${SRC_HOME}/pyenv/versions \
         && mv /root/.pyenv/versions/* ${SRC_HOME}/pyenv/versions \
