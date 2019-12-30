@@ -206,7 +206,7 @@ let g:repl_position = 3                     "0表示出现在下方，1表示出
 let g:repl_stayatrepl_when_open = 0         "打开REPL时是回到原文件（1）还是停留在REPL窗口中（0）
 
 let g:repl_program = {
-				\	"python": "python",
+				\	"python": "ipython",
 				\	"default": "bash"
 				\	}
 
