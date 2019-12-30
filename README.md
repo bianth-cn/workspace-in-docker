@@ -54,7 +54,7 @@
 - [`pye`](./scripts/usage/pye.md): `python`开发任务管理入口
 - [`goe`](./scripts/usage/goe.md): `go`开发任务管理入口
 - [`gite`](./scripts/usage/gite.md): `git`相关命令入口
-- `gh-md-toc`: 对[`gh-md-toc`](https://github.com/ekalinin/github-markdown-toc)的封装, 可对指定目录下的所有`markdown`格式文件生成`TOC`
+- `gh-md-toc`: 对[`gh-md-toc`](https://github.com/ekalinin/github-markdown-toc)的封装, 可对指定目录下的所有`markdown`格式文件生成`TOC
 - `vimdiff`: 对`vimdiff`及[`vim-dirdiff`](https://github.com/will133/vim-dirdiff)的封装, 可比对指定目录的差异
 - `guide`: 查看使用手册(施工中……)
 - `welcome`: 查看欢迎界面
@@ -194,4 +194,4 @@ nnoremap tm :call OpenTerminal()<cr>
 
   - 由`syntax`导致, 详见[Syntax highlighting causes terrible lag in Vim](https://stackoverflow.com/questions/19030290/syntax-highlighting-causes-terrible-lag-in-vim)
   - 最佳实践是少用`hjkl`, 多用其他更高效的光标移动方法
-> 段落引用
+    > 段落引用

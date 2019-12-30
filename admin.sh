@@ -58,7 +58,7 @@ if [[ ! $(hostname) =~ ^(${DEV_CONTAINER_NAME_WITH_PROXY}|${DEV_CONTAINER_NAME})
         WORKSPACE=/home/$(whoami)/workspace
         SSH_KEY=/home/$(whoami)/.ssh
         ECHO='echo -e'
-        INTERFACE=ens192
+        INTERFACE=enp0s3
         IP="$(ifconfig | grep -A1 ${INTERFACE} | grep " broadcast " | awk -F "[inet ]+" '{print $2}')"
     fi
 else
@@ -147,36 +147,36 @@ function init_host() {
         fi
     fi
 
-    if [[ $(uname) == 'Linux' && ! -d ${HOME}/.local/share/fonts ]]; then
-        download_font "DejaVu Sans Mono Bold Oblique for Powerline.ttf"
-        download_font "DejaVu Sans Mono Bold for Powerline.ttf"
-        download_font "DejaVu Sans Mono Oblique for Powerline.ttf"
-        download_font "DejaVu Sans Mono for Powerline.ttf"
-        download_font "DroidSansMonoForPowerlinePlusNerdFileTypesMono.otf"
-        download_font "Ubuntu Mono derivative Powerline Nerd Font Complete.ttf"
-        download_font "WEBDINGS.TTF"
-        download_font "WINGDNG2.ttf"
-        download_font "WINGDNG3.ttf"
-        download_font "devicons.ttf"
-        download_font "mtextra.ttf"
-        download_font "symbol.ttf"
-        download_font "wingding.ttf"
+    # if [[ $(uname) == 'Linux' && ! -d ${HOME}/.local/share/fonts ]]; then
+    #     download_font "DejaVu Sans Mono Bold Oblique for Powerline.ttf"
+    #     download_font "DejaVu Sans Mono Bold for Powerline.ttf"
+    #     download_font "DejaVu Sans Mono Oblique for Powerline.ttf"
+    #     download_font "DejaVu Sans Mono for Powerline.ttf"
+    #     download_font "DroidSansMonoForPowerlinePlusNerdFileTypesMono.otf"
+    #     download_font "Ubuntu Mono derivative Powerline Nerd Font Complete.ttf"
+    #     download_font "WEBDINGS.TTF"
+    #     download_font "WINGDNG2.ttf"
+    #     download_font "WINGDNG3.ttf"
+    #     download_font "devicons.ttf"
+    #     download_font "mtextra.ttf"
+    #     download_font "symbol.ttf"
+    #     download_font "wingding.ttf"
 
-        apt-get update
-        apt-get install -y --no-install-recommends xfonts-utils
+    #     sudo apt-get update
+    #     sudo apt-get install -y --no-install-recommends xfonts-utils
 
-        fc-cache -fv >/dev/null
-        mkfontdir "$HOME/.local/share/fonts" >/dev/null
-        mkfontscale "$HOME/.local/share/fonts" >/dev/null
+    #     sudo fc-cache -fv >/dev/null
+    #     sudo mkfontdir "$HOME/.local/share/fonts" >/dev/null
+    #     sudo mkfontscale "$HOME/.local/share/fonts" >/dev/null
 
-        if [[ $? == 0 ]]; then
-            ${ECHO} "${green}Fonts install successfully.${normal}"
-        else
-            ${ECHO} "${red}Fonts install failed!${normal}"
-        fi
-    fi
+    #     if [[ $? == 0 ]]; then
+    #         ${ECHO} "${green}Fonts install successfully.${normal}"
+    #     else
+    #         ${ECHO} "${red}Fonts install failed!${normal}"
+    #     fi
+    # fi
 
-    mkdir -p ${WORKSPACE}
+    sudo mkdir -p ${WORKSPACE}
     ${HARBOR:+mkdir -p /etc/docker/certs.d/${HARBOR}}
 
     if [[ ${DIRNAME} != ${WORKSPACE}/${WS_NAME} ]]; then
@@ -186,25 +186,23 @@ function init_host() {
     fi
 
     if [[ ${IDE_CONF} == k-vim ]]; then
-        sed -i '.bak' "s#Author        : .*>#Author        : ${USER_NAME} <${USER_EMAIL}>#g" ${WORKSPACE}/${WS_NAME}/vim.conf/${IDE_CONF}/vimrc
-        rm -f ${WORKSPACE}/${WS_NAME}/vim.conf/${IDE_CONF}/vimrc.bak
+        sed -i "s#Author        : .*>#Author        : ${USER_NAME} <${USER_EMAIL}>#g" ${WORKSPACE}/${WS_NAME}/vim.conf/${IDE_CONF}/vimrc
     fi
 
-    echo "bash ${WORKSPACE}/${WS_NAME}/admin.sh "\$@"" >/usr/local/bin/ws
-    chmod +x /usr/local/bin/ws
+    echo "bash ${WORKSPACE}/${WS_NAME}/admin.sh "\$@"" | sudo tee /usr/local/bin/ws
+    sudo chmod +x /usr/local/bin/ws
     ${ECHO} "${green}Initial successfully, then you can run the command \"${blue}ws${green}\" anywhere instead of \"admin.sh\".${normal}"
     echo
 }
 
 function init_kvim() {
-    sed -i '.bak' 's#^IDE_CONF=.*$#IDE_CONF=k-vim#g' ${WORKSPACE}/${WS_NAME}/admin.sh
-    rm -f ${WORKSPACE}/${WS_NAME}/admin.sh.bak
+    sed -i 's#^IDE_CONF=.*$#IDE_CONF=k-vim#g' ${WORKSPACE}/${WS_NAME}/admin.sh
 
-    mkdir -p ${WORKSPACE}/.vim
-    [[ -d ${WORKSPACE}/.vim/UltiSnips ]] && rm -rf ${WORKSPACE}/.vim/UltiSnips
-    [[ -d ${WORKSPACE}/.vim/syntax ]] && rm -rf ${WORKSPACE}/.vim/syntax
-    cp -rf ${WORKSPACE}/${WS_NAME}/vim.conf/k-vim/UltiSnips ${WORKSPACE}/.vim
-    cp -rf ${WORKSPACE}/${WS_NAME}/vim.conf/k-vim/syntax ${WORKSPACE}/.vim
+    sudo mkdir -p ${WORKSPACE}/.vim
+    [[ -d ${WORKSPACE}/.vim/UltiSnips ]] && sudo rm -rf ${WORKSPACE}/.vim/UltiSnips
+    [[ -d ${WORKSPACE}/.vim/syntax ]] && sudo rm -rf ${WORKSPACE}/.vim/syntax
+    sudo cp -rf ${WORKSPACE}/${WS_NAME}/vim.conf/k-vim/UltiSnips ${WORKSPACE}/.vim
+    sudo cp -rf ${WORKSPACE}/${WS_NAME}/vim.conf/k-vim/syntax ${WORKSPACE}/.vim
 
     docker run \
         -it --rm \
