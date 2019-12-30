@@ -4,4 +4,4 @@
 # Last Modified : 2019-12-30 14:39
 # Filename      : clean.sh
 
-ps -ef  | grep -v PID | grep -v ps | grep -v /bin/bash | awk '{print $2}' | xargs kill -9 > /dev/null 2>&1
+ps -ef  | grep -v PID | grep -v ps | grep -v "/bin/bash" | awk '{print $2}' | xargs kill -9 > /dev/null 2>&1
