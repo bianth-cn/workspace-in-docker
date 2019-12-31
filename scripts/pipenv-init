@@ -57,6 +57,11 @@ if [[ ! ${PY_VERSION} =~ ^([0-9].[0-9].[0-9]{1,2})$ ]]; then
     usage
 fi
 
+VERSION_LIST=$(echo $(ls /root/.pyenv/versions | egrep "^[0-9]\.[0-9]\.[0-9]{1,2}$") | sed 's/ /|/g')
+if [[ ! ${PY_VERSION} =~ ^${VERSION_LIST}$ ]]; then
+    pyenv install ${PY_VERSION}
+fi
+
 PROJECT_HOME=${PROJECT_BASE}/${PY_VERSION}/${PROJECT_NAME}
 
 if [[ -d ${PROJECT_HOME} ]]; then

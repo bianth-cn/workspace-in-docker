@@ -41,7 +41,9 @@ Plug 'w0rp/ale'
 " Group dependencies, vim-snippets depends on ultisnips
 " 代码片段快速插入 (snippets中,是代码片段资源,需要学习)
 " Snippets are separated from the engine. Add this if you want them:
-Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+if has ('python3') 
+    Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+endif
 
 " auto complete
 " 代码自动补全
@@ -369,8 +371,12 @@ endif
     let g:UltiSnipsSnippetDirectories  = ['UltiSnips']
     let g:UltiSnipsSnippetsDir = '~/.vim/UltiSnips'
     " 定义存放代码片段的文件夹 .vim/UltiSnips下，使用自定义和默认的，将会的到全局，有冲突的会提示
-    autocmd FileType python :UltiSnipsAddFiletypes python.django
-    autocmd FileType html :UltiSnipsAddFiletypes htmldjango.html
+
+    if has ('python3') 
+        autocmd FileType python :UltiSnipsAddFiletypes python.django
+        autocmd FileType html :UltiSnipsAddFiletypes htmldjango.html
+    endif
+
     " 进入对应filetype的snippets进行编辑
     map <leader>us :UltiSnipsEdit<CR>
 
