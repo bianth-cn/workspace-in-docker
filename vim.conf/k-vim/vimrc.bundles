@@ -17,7 +17,7 @@ filetype off " required! turn off
 " inspired by spf13, 自定义需要的插件集合
 if !exists('g:bundle_groups')
     " let g:bundle_groups=['python', 'javascript', 'go', 'php', 'ruby', 'sh', 'markdown', 'html', 'css', 'less', 'coffeescript', 'tmux', 'json', 'beta']
-    let g:bundle_groups=['python', 'go', 'sh', 'json', 'markdown', 'yaml', 'Dockerfile']
+    let g:bundle_groups=['python', 'go', 'sh', 'json', 'markdown', 'ansible', 'yaml', 'Dockerfile']
 endif
 
 " ----------------------------------------------------------------------------
@@ -154,6 +154,11 @@ Plug 'sjl/gundo.vim'
 Plug 'will133/vim-dirdiff'
 
 " others
+if count(g:bundle_groups, 'ansible')
+   " Plug 'pearofducks/ansible-vim', {'for': 'ansible'}
+   Plug 'chase/vim-ansible-yaml', {'for': 'ansible'}
+endif
+
 if count(g:bundle_groups, 'Dockerfile')
     Plug 'ekalinin/Dockerfile.vim', {'for': 'Dockerfile'}
 endif

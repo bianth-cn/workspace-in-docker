@@ -55,3 +55,4 @@ yamllint==1.16.0
 yapf==0.27.0
 ipython-genutils==0.2.0
 ipython==7.6.0
+ansible-lint==4.2.0
