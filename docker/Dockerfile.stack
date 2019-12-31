@@ -92,7 +92,8 @@ RUN set -e \
             man-db manpages \
             \
             bash-completion sysstat tree dos2unix zip unzip expect ldap-utils \
-            inetutils-ping net-tools telnet dnsutils netcat traceroute tcpdump mtr \
+            inetutils-ping net-tools telnet dnsutils netcat traceroute tcpdump mtr iproute2 \
+            strace lsof pstack iotop \
         \
         && rm -rf /var/lib/apt/lists/*
 
