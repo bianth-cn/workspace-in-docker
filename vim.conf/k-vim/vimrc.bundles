@@ -206,6 +206,12 @@ call plug#end()
 
 " ################### 基础 ######################
 
+" mru.vim {{{
+" let MRU_Use_Current_Window = 1
+
+" autocmd vimenter '' :MRU
+" }}}
+
 " vim-repl {{{
 let g:repl_height = 15                      "窗口高度
 let g:sendtorepl_invoke_key = "ww"          "传送代码快捷键，默认为ww
