@@ -30,12 +30,15 @@ call plug#begin('~/.vim/bundle')
 " 移动光标到插件名上, 使用'#'快速跳转到每个插件的配置处
 
 " Yggdroot/indentLine
+" 代码块垂直线
 Plug 'Yggdroot/indentLine'
 
 " vim-repl
+" 交互式编程
 Plug 'sillybun/vim-repl', {'do': './install.sh', 'for': ['python', 'sh']}
 
 " ale
+" 异步错误提示
 Plug 'w0rp/ale'
 
 " Group dependencies, vim-snippets depends on ultisnips
@@ -499,7 +502,7 @@ endif
 
 " gitgutter {{{
     " 同git diff,实时展示文件中修改的行
-    " 只是不喜欢除了行号多一列, 默认关闭,gs时打开
+    " 只是不喜欢除了行号多一列, 默认关闭,gt时打开
     nmap ]g <Plug>GitGutterNextHunk
     nmap [g <Plug>GitGutterPrevHunk
     let g:gitgutter_map_keys = 1
