@@ -29,6 +29,10 @@ call plug#begin('~/.vim/bundle')
 
 " 移动光标到插件名上, 使用'#'快速跳转到每个插件的配置处
 
+" yegappan/mru
+" 最近打开文档
+Plug 'yegappan/mru'
+
 " Yggdroot/indentLine
 " 代码块垂直线
 Plug 'Yggdroot/indentLine'
@@ -182,7 +186,7 @@ if count(g:bundle_groups, 'go')
     " 2. :GoInstallBinaries
     " vimgo  https://github.com/fatih/vim-go
     Plug 'fatih/vim-go', {'for': 'go'}
-    Plug 'zchee/deoplete-go', {'for': 'go'}
+    Plug 'zchee/deoplete-go', {'do': 'make', 'for': 'go'}
 endif
 
 
@@ -210,9 +214,10 @@ call plug#end()
 " ################### 基础 ######################
 
 " mru.vim {{{
-" let MRU_Use_Current_Window = 1
+let MRU_Use_Current_Window = 1
+let MRU_Max_Entries = 35
 
-" autocmd vimenter '' :MRU
+autocmd vimenter * :MRU
 " }}}
 
 " vim-repl {{{

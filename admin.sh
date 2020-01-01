@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Author        : Tony Bian <biantonghe@gmail.com>
-# Last Modified : 2020-01-01 08:09
+# Last Modified : 2020-01-01 14:35
 # Filename      : admin.sh
 
 DIRNAME=$(
@@ -226,7 +226,10 @@ function init_kvim() {
                     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
                 \
                 && pyenv local \${DEFAULT_PY3_VERSION} \
-                && /usr/local/vim.py3/bin/vim +PlugUpdate! +PlugClean! +qall
+                && /usr/local/vim.py3/bin/vim +PlugUpdate! +PlugClean! +qall \
+                \
+                && mkdir -p /root/.vim/plugin \
+                && ln -sf /root/.vim/bundle/mru/plugin/mru.vim /root/.vim/plugin/mru.vim
             "
     ${ECHO} ${yellow}vim-ide已配置为k-vim, 重建DEV workspace后生效.${normal}
     ${ECHO}
