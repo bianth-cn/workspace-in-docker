@@ -9,10 +9,10 @@ alias grep="TERM=xterm grep --color=auto"
 alias egrep="TERM=xterm egrep --color=auto"
 alias fgrep="TERM=xterm fgrep --color=auto"
 
-alias ansible="TERM=xterm ansible"
-alias ansible-playbook="TERM=xterm ansible-playbook"
+alias a="TERM=xterm ansible"
+alias ap="TERM=xterm ansible-playbook"
 
-alias busybox="docker run -it --rm tonybian/busybox bash"
+# alias busybox="docker run -it --rm tonybian/busybox bash"
 
 stty erase ^h
 stty erase ^?

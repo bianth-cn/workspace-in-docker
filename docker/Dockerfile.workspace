@@ -6,7 +6,7 @@ RUN set -e \
         && apt-get install -y --no-install-recommends \
             shellcheck nodejs ruby \
             \
-            libgtk2.0-dev gettext lua5.3 liblua5.3-dev luajit libluajit-5.1 ruby-dev libperl-dev \
+            libgtk2.0-dev gettext lua5.3 liblua5.3-dev luajit libluajit-5.1 ruby-dev libperl-dev php7.2-dev \
             \
             fish libtool-bin ninja-build xclip ctags cmake silversearcher-ag \
         \

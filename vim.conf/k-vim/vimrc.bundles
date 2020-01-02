@@ -171,7 +171,9 @@ if count(g:bundle_groups, 'Dockerfile')
 endif
 
 if count(g:bundle_groups, 'markdown')
+    " Plug 'godlygeek/tabular', {'for': 'markdown'}
     Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
+    Plug 'lvht/tagbar-markdown', {'for': 'markdown'}
     Plug 'dhruvasagar/vim-table-mode', {'for': 'markdown'}
     " https://github.com/suan/vim-instant-markdown
     " npm -g install instant-markdown-d
@@ -217,7 +219,7 @@ call plug#end()
 let MRU_Use_Current_Window = 1
 let MRU_Max_Entries = 35
 
-autocmd vimenter * :MRU
+autocmd vimenter mru :MRU
 " }}}
 
 " vim-repl {{{
@@ -425,6 +427,7 @@ endif
     au FileType python let b:delimitMate_nesting_quotes = ['"']
     " 关闭某些类型文件的自动补全
     "au FileType mail let b:delimitMate_autoclose = 0
+    let delimitMate_quotes = "\" '"
 " }}}
 
 " supertab {{{
@@ -732,8 +735,15 @@ endif
 
 " markdown {{{
     let g:vim_markdown_folding_disabled=1
+    let g:vim_markdown_conceal = 0
+    let g:vim_markdown_conceal_code_blocks = 0
+    let g:vim_markdown_strikethrough = 1
+    let g:vim_markdown_auto_insert_bullets = 0
+    let g:vim_markdown_new_list_item_indent = 0
 
-    autocmd vimenter *.md,*.markdown,*.mdown :TableModeToggle
+    " autocmd vimenter *.md,*.markdown,*.mdown :TableModeToggle
+    autocmd FileType markdown :silent! TableModeEnable
+
     let g:table_mode_corner='|'
     " let g:table_mode_header_fillchar='='
     function! s:isAtStartOfLine(mapping)
