@@ -19,7 +19,7 @@
 ## 这里有什么？
 
 - 预装了[`pyenv`](https://github.com/pyenv/pyenv)、[`pipenv`](https://github.com/pypa/pipenv)、`python2.7`、`python3.6`的`python`开发环境
-- 预装了[`gvm`](https://github.com/moovweb/gvm)、[`glide`](https://github.com/Masterminds/glide)、`go1.10`的`go`开发环境
+- 预装了[`gvm`](https://github.com/moovweb/gvm)、[`glide`](https://github.com/Masterminds/glide)、`go1.13`的`go`开发环境
 - 基于[`k-vim`](https://github.com/wklken/k-vim)做了大量扩展和调整的`vim-ide`
 - 支持切换[`SpaceVim`](https://github.com/SpaceVim/SpaceVim)作为`vim-ide`的配置
 - 支持使用自定义配置作为`vim-ide`的配置
@@ -176,7 +176,6 @@ nnoremap tm :call OpenTerminal()<cr>
 - `vim`自动补全失效或报错
 
   - `vim`的使用依赖于环境变量, 当切换到`VENV workspace`时，需要重新启动`vim`使环境变量生效
-  - `go`版本为`1.11.x`时, 自动补全将失效, 原因不明, 怀疑与`gocode`对版本的支持有关
 
 - 修改`vim`配置后配置失效
 

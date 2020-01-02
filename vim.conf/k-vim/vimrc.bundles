@@ -34,7 +34,7 @@ call plug#begin('~/.vim/bundle')
 Plug 'yegappan/mru'
 
 " Yggdroot/indentLine
-" 代码块垂直线
+" 代码缩进垂直线
 Plug 'Yggdroot/indentLine'
 
 " vim-repl
@@ -197,7 +197,6 @@ if count(g:bundle_groups, 'python')
     " pythonsyntax
     Plug 'davidhalter/jedi-vim', {'for': 'python'}
     Plug 'Glench/Vim-Jinja2-Syntax'
-    " Plug 'pearofducks/ansible-vim'
 endif
 
 if count(g:bundle_groups, 'sh')
