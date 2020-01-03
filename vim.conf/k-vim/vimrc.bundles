@@ -162,8 +162,9 @@ Plug 'will133/vim-dirdiff'
 
 " others
 if count(g:bundle_groups, 'ansible')
-   " Plug 'pearofducks/ansible-vim', {'for': 'ansible'}
-   Plug 'chase/vim-ansible-yaml', {'for': 'ansible'}
+   " Plug 'pearofducks/ansible-vim', {'do': './UltiSnips/generate.sh', 'for': 'ansible'}
+   Plug 'pearofducks/ansible-vim', {'for': 'ansible'}
+   Plug 'phenomenes/ansible-snippets', {'for': 'ansible'}
 endif
 
 if count(g:bundle_groups, 'Dockerfile')
@@ -758,6 +759,15 @@ endif
     inoreabbrev <expr> __
               \ <SID>isAtStartOfLine('__') ?
               \ '<c-o>:silent! TableModeDisable<cr>' : '__'
+" }}}
+
+" ansible {{{
+    let g:ansible_unindent_after_newline = 1
+    let g:ansible_attribute_highlight = "ob"
+    let g:ansible_name_highlight = 'd'
+    let g:ansible_extra_keywords_highlight = 1
+    let g:ansible_normal_keywords_highlight = 'Define'
+    let g:ansible_with_keywords_highlight = 'Define'
 " }}}
 
 " json {{{
