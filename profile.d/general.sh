@@ -8,6 +8,7 @@ alias cdws="cd ${WORKSPACE}"
 alias grep="TERM=xterm grep --color=auto"
 alias egrep="TERM=xterm egrep --color=auto"
 alias fgrep="TERM=xterm fgrep --color=auto"
+alias mru="TERM=xterm vim mru"
 
 alias a="TERM=xterm ansible"
 alias ap="TERM=xterm ansible-playbook"

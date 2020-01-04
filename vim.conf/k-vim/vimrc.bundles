@@ -29,19 +29,21 @@ call plug#begin('~/.vim/bundle')
 
 " 移动光标到插件名上, 使用'#'快速跳转到每个插件的配置处
 
-" yegappan/mru
 " 最近打开文档
 Plug 'yegappan/mru'
 
-" Yggdroot/indentLine
+" " 有道翻译
+Plug 'ianva/vim-youdao-translater'
+
+" voldikss/vim-translator
+" Plug 'voldikss/vim-translator'
+
 " 代码缩进垂直线
 Plug 'Yggdroot/indentLine'
 
-" vim-repl
 " 交互式编程
 Plug 'sillybun/vim-repl', {'do': './install.sh', 'for': ['python', 'sh']}
 
-" ale
 " 异步错误提示
 Plug 'w0rp/ale'
 
@@ -52,10 +54,7 @@ if has ('python3')
     Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 endif
 
-" auto complete
 " 代码自动补全
-" Plug 'Valloric/YouCompleteMe'
-
 Plug 'Shougo/neocomplete.vim'
 
 if has ('python3') 
@@ -108,6 +107,21 @@ Plug 'terryma/vim-expand-region'
 " 多光标选中编辑
 " multiplecursors
 Plug 'terryma/vim-multiple-cursors'
+
+" 全文搜索
+Plug 'dyng/ctrlsf.vim'
+" Enter, o, double-click - Open corresponding file of current line in the window which CtrlSF is launched from.
+" <C-O> - Like Enter but open file in a horizontal split window.
+" t - Like Enter but open file in a new tab.
+" p - Like Enter but open file in a preview window.
+" P - Like Enter but open file in a preview window and switch focus to it.
+" O - Like Enter but always leave CtrlSF window opening.
+" T - Like t but focus CtrlSF window instead of new opened tab.
+" M - Switch result window between normal view and compact view.
+" q - Quit CtrlSF window.
+" <C-J> - Move cursor to next match.
+" <C-K> - Move cursor to previous match.
+" <C-C> - Stop a background searching process.
 
 " quick locate file or function
 " 文件搜索
@@ -216,30 +230,63 @@ call plug#end()
 " ################### 基础 ######################
 
 " mru.vim {{{
-let MRU_Use_Current_Window = 1
-let MRU_Max_Entries = 35
+    let MRU_Use_Current_Window = 1
+    let MRU_Max_Entries = 35
 
-autocmd vimenter mru :MRU
+    autocmd vimenter mru :MRU
 " }}}
 
+" youdao {{{
+    vnoremap <silent> yd :<C-u>Ydv<CR>
+    nnoremap <silent> yd :<C-u>Ydc<CR>
+    noremap <leader>yd :<C-u>Yde<CR>
+" }}}
+
+" " translator {{{
+"     " Echo translation in the cmdline
+"     nmap <silent> <Leader>t <Plug>Translate
+"     vmap <silent> <Leader>t <Plug>TranslateV
+"     " Display translation in a window
+"     nmap <silent> <Leader>w <Plug>TranslateW
+"     vmap <silent> <Leader>w <Plug>TranslateWV
+"     " Replace the text with translation
+"     nmap <silent> <Leader>r <Plug>TranslateR
+"     vmap <silent> <Leader>r <Plug>TranslateRV
+" " }}}
+
 " vim-repl {{{
-let g:repl_height = 15                      "窗口高度
-let g:sendtorepl_invoke_key = "ww"          "传送代码快捷键，默认为ww
-let g:repl_position = 3                     "0表示出现在下方，1表示出现在下方，2在左边，3在右边
-let g:repl_stayatrepl_when_open = 0         "打开REPL时是回到原文件（1）还是停留在REPL窗口中（0）
+    let g:repl_height = 15                      "窗口高度
+    let g:sendtorepl_invoke_key = "ww"          "传送代码快捷键，默认为ww
+    let g:repl_position = 3                     "0表示出现在下方，1表示出现在下方，2在左边，3在右边
+    let g:repl_stayatrepl_when_open = 0         "打开REPL时是回到原文件（1）还是停留在REPL窗口中（0）
+    let g:repl_python_automerge = 1
+    let g:repl_cursor_down = 1
 
-let g:repl_program = {
-				\	"python": "ipython",
-				\	"default": "bash"
-				\	}
+    let g:repl_program = {
+                \	"python": "ipython",
+                \	"default": "bash",
+                \   'r': 'R',
+                \   'lua': 'lua',
+                \   'vim': 'vim -e',
+                \	}
 
-nnoremap rr :REPLToggle<Cr>
+    let g:repl_exit_commands = {
+                \'python': 'quit()',
+                \'bash': 'exit',
+                \'zsh': 'exit',
+                \'default': 'exit',
+                \}
 
-tnoremap <C-h> <C-w><C-h>
-tnoremap <C-j> <C-w><C-j>
-tnoremap <C-k> <C-w><C-k>
-tnoremap <C-l> <C-w><C-l>
+    autocmd Filetype python nnoremap <F12> <Esc>:REPLDebugStopAtCurrentLine<Cr>
+    autocmd Filetype python nnoremap <F10> <Esc>:REPLPDBN<Cr>
+    autocmd Filetype python nnoremap <F11> <Esc>:REPLPDBS<Cr>
 
+    nnoremap rr :REPLToggle<Cr>
+
+    tnoremap <C-h> <C-w><C-h>
+    tnoremap <C-j> <C-w><C-j>
+    tnoremap <C-k> <C-w><C-k>
+    tnoremap <C-l> <C-w><C-l>
 " }}}
 
 " ale {{{
@@ -477,6 +524,28 @@ endif
 " }}}
 
 " ################### 功能相关 ###################
+
+" dyng/ctrlsf.vim {{{
+    let g:ctrlsf_auto_close = {
+        \ "normal" : 0,
+        \ "compact": 0
+        \}
+    let g:ctrlsf_auto_focus = {
+        \ "at": "start"
+        \ }
+    
+    let g:ctrlsf_default_root = 'project+fw'
+    let g:ctrlsf_regex_pattern = 1
+
+    nmap     <C-F>f <Plug>CtrlSFPrompt
+    vmap     <C-F>f <Plug>CtrlSFVwordPath
+    vmap     <C-F>F <Plug>CtrlSFVwordExec
+    nmap     <C-F>n <Plug>CtrlSFCwordPath
+    nmap     <C-F>p <Plug>CtrlSFPwordPath
+    nnoremap <C-F>o :CtrlSFOpen<CR>
+    nnoremap <C-F>t :CtrlSFToggle<CR>
+    inoremap <C-F>t <Esc>:CtrlSFToggle<CR>
+" }}}
 
 " kien/ctrlp.vim {{{
     let g:ctrlp_map = '<C-P>'
