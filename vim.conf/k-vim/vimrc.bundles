@@ -191,7 +191,6 @@ if count(g:bundle_groups, 'markdown')
     Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
     Plug 'lvht/tagbar-markdown', {'for': 'markdown'}
     Plug 'dhruvasagar/vim-table-mode', {'for': 'markdown'}
-    " Plug 'joker1007/vim-markdown-quote-syntax', {'for': 'markdown'}
     " https://github.com/suan/vim-instant-markdown
     " npm -g install instant-markdown-d
     " Plug 'suan/vim-instant-markdown'
