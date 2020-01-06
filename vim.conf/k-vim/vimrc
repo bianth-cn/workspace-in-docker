@@ -556,6 +556,7 @@ endif
 set cc=120
 set background=dark
 set t_Co=256
+set fillchars=vert:\|
 
 colorscheme solarized
 
@@ -565,6 +566,7 @@ colorscheme solarized
 " hi! link ShowMarksHLu DiffChange
 highlight clear SignColumn
 highlight clear LineNr
+highlight clear VertSplit
 
 " for error highlight，防止错误整行标红导致看不清
 " highlight clear SpellBad

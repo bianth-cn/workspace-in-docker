@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Author        : Tony Bian <biantonghe@gmail.com>
-# Last Modified : 2020-01-01 14:35
+# Last Modified : 2020-01-05 09:18
 # Filename      : admin.sh
 
 DIRNAME=$(
@@ -211,6 +211,7 @@ function init_kvim() {
         -v ${WORKSPACE}/.vim:/root/.vim \
         -v ${WORKSPACE}/${WS_NAME}/vim.conf/k-vim/vimrc:/root/.vimrc \
         -v ${WORKSPACE}/${WS_NAME}/vim.conf/k-vim/vimrc.bundles:/root/.vimrc.bundles \
+        -v ${WORKSPACE}/${WS_NAME}/vim.conf/k-vim/ctags:/root/.ctags \
         ${DEV_DOCKER_IMAGE} \
         bash -c "
             set -ex \

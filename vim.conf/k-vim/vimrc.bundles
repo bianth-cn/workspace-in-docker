@@ -177,6 +177,7 @@ Plug 'will133/vim-dirdiff'
 " others
 if count(g:bundle_groups, 'ansible')
    " Plug 'pearofducks/ansible-vim', {'do': './UltiSnips/generate.sh', 'for': 'ansible'}
+   " Plug 'chase/vim-ansible-yaml', {'for': 'ansible'}
    Plug 'pearofducks/ansible-vim', {'for': 'ansible'}
    Plug 'phenomenes/ansible-snippets', {'for': 'ansible'}
 endif
@@ -190,6 +191,7 @@ if count(g:bundle_groups, 'markdown')
     Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
     Plug 'lvht/tagbar-markdown', {'for': 'markdown'}
     Plug 'dhruvasagar/vim-table-mode', {'for': 'markdown'}
+    " Plug 'joker1007/vim-markdown-quote-syntax', {'for': 'markdown'}
     " https://github.com/suan/vim-instant-markdown
     " npm -g install instant-markdown-d
     " Plug 'suan/vim-instant-markdown'
@@ -232,8 +234,6 @@ call plug#end()
 " mru.vim {{{
     let MRU_Use_Current_Window = 1
     let MRU_Max_Entries = 35
-
-    autocmd vimenter mru :MRU
 " }}}
 
 " youdao {{{
@@ -705,6 +705,7 @@ endif
     let g:tagbar_width = 30
     let g:tagbar_iconchars = ['▸', '▾']
     " let g:tagbar_show_visibility = 1
+
     " for ruby
     let g:tagbar_type_ruby = {
         \ 'kinds' : [
@@ -716,6 +717,15 @@ endif
             \ 'F:singleton methods'
         \ ]
     \ }
+
+    " ansible的tagbar配置
+    let g:tagbar_type_ansible = {
+        \ 'ctagstype' : 'ansible',
+        \ 'kinds' : [
+            \ 't:tasks'
+        \ ],
+        \ 'sort' : 0
+        \ }
 
     " go语言的tagbar配置
     " 1. install gotags 'go get -u github.com/jstemmer/gotags'
