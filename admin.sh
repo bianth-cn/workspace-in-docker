@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Author        : Tony Bian <biantonghe@gmail.com>
-# Last Modified : 2020-01-05 09:18
+# Last Modified : 2020-01-07 03:46
 # Filename      : admin.sh
 
 DIRNAME=$(
@@ -203,6 +203,7 @@ function init_kvim() {
     [[ -d ${WORKSPACE}/.vim/syntax ]] && sudo rm -rf ${WORKSPACE}/.vim/syntax
     sudo cp -rf ${WORKSPACE}/${WS_NAME}/vim.conf/k-vim/UltiSnips ${WORKSPACE}/.vim
     sudo cp -rf ${WORKSPACE}/${WS_NAME}/vim.conf/k-vim/syntax ${WORKSPACE}/.vim
+    sudo cp -rf ${WORKSPACE}/${WS_NAME}/vim.conf/k-vim/dict ${WORKSPACE}/.vim
 
     docker run \
         -it --rm \
