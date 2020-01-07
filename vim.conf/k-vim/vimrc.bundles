@@ -412,6 +412,16 @@ endif
 "" }}}
 
 " neocomplete/deoplete {{{
+    " if &filetype == 'yaml.ansible'
+    "     let g:neocomplete#enable_at_startup = 0
+    "     let g:deoplete#enable_at_startup = 1
+    "     setlocal dictionary+=~/.vim/dict/ansible.dict
+    "     call deoplete#custom#source(
+    "                 \ 'dictionary', 'matchers', ['matcher_head'])
+    "     " call deoplete#custom#source(
+    "     "            \ 'dictionary', 'min_pattern_length', 2)
+    " endif
+
     if has ('python')
         let g:neocomplete#enable_at_startup = 1
 
