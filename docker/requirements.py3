@@ -1,4 +1,6 @@
 ansible==2.9.2
+pymongo==3.10.1
+PyMysql==0.9.3
 asn1crypto==0.24.0
 backcall==0.1.0
 cachetools==3.1.1

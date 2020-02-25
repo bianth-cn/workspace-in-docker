@@ -8,7 +8,7 @@ RUN set -e \
             \
             libgtk2.0-dev gettext lua5.3 liblua5.3-dev luajit libluajit-5.1 ruby-dev libperl-dev php7.2-dev \
             \
-            fish libtool-bin ninja-build xclip ctags cmake silversearcher-ag \
+            fish libtool-bin ninja-build xclip ctags cmake silversearcher-ag sshpass \
         \
         && rm -rf /var/lib/apt/lists/*
 
@@ -91,6 +91,7 @@ RUN set -e \
         && git config --global alias.cm "commit -s -a" \
         && git config --global alias.ss "status" \
         && git config --global alias.br "branch -a" \
+        && git config --global alias.mg "merge --no-ff" \
         && git config --global alias.cp "cherry-pick -s -x" \
         && git config --global alias.lr "ls-remote origin" \
         && git config --global alias.ls "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit" \

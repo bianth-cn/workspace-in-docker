@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Author        : Tony Bian <biantonghe@gmail.com>
-# Last Modified : 2020-01-07 03:46
+# Last Modified : 2020-01-14 08:00
 # Filename      : admin.sh
 
 DIRNAME=$(
@@ -377,7 +377,7 @@ function dev() {
             -w ${WORKSPACE} \
             -d ${DEV_DOCKER_IMAGE} \
             >/dev/null &&
-            docker exec -it ${CONTAINER_NAME} /bin/bash -c "welcome && exec /bin/bash"
+            docker exec -it ${CONTAINER_NAME} /bin/bash -c 'welcome && git config --global user.name "边同贺(10031100)" && git config --global user.email "bianth@glodon.com" && exec /bin/bash'
     fi
 }
 
