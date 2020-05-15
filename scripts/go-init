@@ -135,7 +135,7 @@ done
 expect <(
     cat <<-EXPECT
   spawn ${SHELL}
-  send ". ${PROJECT_HOME}/.venv\r"
+  send ". ${PROJECT_HOME}/.venv\rgo env -w GO111MODULE=on\rgo env -w GOPROXY=https://goproxy.io,direct\r"
   interact
 EXPECT
 )
