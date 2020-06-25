@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Author        : Tony Bian <biantonghe@gmail.com>
+# Last Modified : 2020-06-14 00:14
+# Filename      : sshp.sh
+
+HOST=$1
+
+help() {
+    echo "Usage: $0 <host>"
+    echo "host list:"
+    for host in $(grep -E "^Host" ~/.ssh/config | grep -v "Host \*" | awk '{print $NF}'); do
+        echo "    ${host}"
+    done
+    exit 1
+}
+
+[ $# -ne 1 ] && help
+
+Passwd=$(grep -A3 -E "^Host ${HOST}$" ~/.ssh/config | grep -E "^# Passwd" | awk '{print $NF}')
+
+sshpass -p ${Passwd} ssh $HOST

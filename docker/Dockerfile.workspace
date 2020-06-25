@@ -107,7 +107,7 @@ RUN set -e \
         && rm -rf gitflow
 
 # install docker-client, docker-compose and dive
-ARG DOCKER_VERSION=19.03.5
+ARG DOCKER_VERSION=19.03.9
 
 RUN set -e \
         && wget https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz \
@@ -117,8 +117,8 @@ RUN set -e \
         \
         && rm -rf docker*
 
-ARG DOCKER_COMPOSE_VERSION=1.25.0
-ARG DIVE_VERSION=0.9.1
+ARG DOCKER_COMPOSE_VERSION=1.26.0
+ARG DIVE_VERSION=0.9.2
 
 RUN set -e \
         && curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" \
@@ -129,6 +129,16 @@ RUN set -e \
         && apt install ./dive_${DIVE_VERSION}_linux_amd64.deb \
         \
         && rm -f *.deb
+
+ARG TERRAFORM_VERSION=0.12.27
+
+RUN set -e \
+        && wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
+        && tar -xzvf terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
+        && mv terraform /usr/local/bin/ \
+        && chmod +x /usr/local/bin/terraform \
+        \
+        && rm -f terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 
 COPY docker/requirements.py3 ${SRC_HOME}/requirements.py3
 COPY docker/requirements.py ${SRC_HOME}/requirements.py
