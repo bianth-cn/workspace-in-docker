@@ -175,6 +175,7 @@ RUN set -e \
 
 # ansible conf
 COPY others/ansible.cfg /etc/ansible/
+COPY others/filter_plugins /etc/ansible/filter_plugins
 
 # pudb conf
 COPY others/pudb.cfg /root/.config/pudb/

@@ -106,7 +106,7 @@ Plug 'easymotion/vim-easymotion'
 Plug 'terryma/vim-expand-region'
 " 多光标选中编辑
 " multiplecursors
-Plug 'terryma/vim-multiple-cursors'
+" Plug 'terryma/vim-multiple-cursors'
 
 " 全文搜索
 Plug 'dyng/ctrlsf.vim'
