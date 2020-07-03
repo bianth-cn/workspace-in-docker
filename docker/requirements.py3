@@ -1,4 +1,4 @@
-ansible==2.9.2
+ansible==2.8.12
 pymongo==3.10.1
 PyMysql==0.9.3
 asn1crypto==0.24.0
