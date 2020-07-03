@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# Author        : Tony Bian <biantonghe@gmail.com>
+# Last Modified : 2020-06-14 00:14
+# Filename      : scpp.sh
+
+help() {
+    echo "Usage: $0 [[user@]host1:]file1 ... [[user@]host2:]file2"
+    echo
+    echo "host list:"
+    for host in $(grep -E "^Host" ~/.ssh/config | grep -v "Host \*" | awk '{print $NF}'); do
+        echo "    ${host}"
+    done
+    exit 1
+}
+
+[ $# -lt 1 ] && help
+
+parameters=$*
+
+sub_string=$(echo ${parameters%:*})
+
+echo $sub_string | grep " " >/dev/null 2>&1
+
+if [ $? = 0 ]; then
+    HOST=$(echo $sub_string | awk '{print $2}')
+else
+    HOST=$sub_string
+fi
+
+Passwd=$(grep -A3 -E "^Host ${HOST}$" ~/.ssh/config | grep -E "^# Passwd" | awk '{print $NF}')
+
+sshpass -p ${Passwd} scp ${@}
