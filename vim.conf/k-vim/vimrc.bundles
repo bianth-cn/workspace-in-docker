@@ -256,7 +256,7 @@ call plug#end()
 " vim-repl {{{
     let g:repl_height = 15                      "窗口高度
     let g:sendtorepl_invoke_key = "ww"          "传送代码快捷键，默认为ww
-    let g:repl_position = 3                     "0表示出现在下方，1表示出现在下方，2在左边，3在右边
+    let g:repl_position = 0                     "0表示出现在下方，1表示出现在下方，2在左边，3在右边
     let g:repl_stayatrepl_when_open = 0         "打开REPL时是回到原文件（1）还是停留在REPL窗口中（0）
     let g:repl_python_automerge = 1
     let g:repl_cursor_down = 1
@@ -694,7 +694,7 @@ endif
 
 " nerdtree nerdtreetabs {{{
     nmap <silent> <F3> :NERDTreeToggle<CR>
-    " autocmd vimenter * NERDTree
+    autocmd vimenter * NERDTree
     let NERDTreeHighlightCursorline=1
     let nerdtreeignore=['\.py[cdo]$', '^__pycache__$', '\~$', '\.swo$', '\.swp$', '^\.git$', '^\.hg$', '^\.svn$', '\.bzr$', '\.obj$', '\.o$', '\.so$', '\.egg$', '^\.hg$']
     "close vim if the only window left open is a NERDTree
