@@ -199,8 +199,10 @@ function init_kvim() {
     sed -i 's#^IDE_CONF=.*$#IDE_CONF=k-vim#g' ${WORKSPACE}/${WS_NAME}/admin.sh
 
     sudo mkdir -p ${WORKSPACE}/.vim
+    [[ -d ${WORKSPACE}/.vim/autoload ]] && sudo rm -rf ${WORKSPACE}/.vim/autoload
     [[ -d ${WORKSPACE}/.vim/UltiSnips ]] && sudo rm -rf ${WORKSPACE}/.vim/UltiSnips
     [[ -d ${WORKSPACE}/.vim/syntax ]] && sudo rm -rf ${WORKSPACE}/.vim/syntax
+    sudo cp -rf ${WORKSPACE}/${WS_NAME}/vim.conf/k-vim/autoload ${WORKSPACE}/.vim
     sudo cp -rf ${WORKSPACE}/${WS_NAME}/vim.conf/k-vim/UltiSnips ${WORKSPACE}/.vim
     sudo cp -rf ${WORKSPACE}/${WS_NAME}/vim.conf/k-vim/syntax ${WORKSPACE}/.vim
     sudo cp -rf ${WORKSPACE}/${WS_NAME}/vim.conf/k-vim/dict ${WORKSPACE}/.vim
@@ -223,9 +225,6 @@ function init_kvim() {
                 && mkdir -p /root/.vim/colors \
                 && git clone git://github.com/altercation/vim-colors-solarized.git \
                 && mv vim-colors-solarized/colors/solarized.vim /root/.vim/colors \
-                \
-                && curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-                    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
                 \
                 && pyenv local \${DEFAULT_PY3_VERSION} \
                 && /usr/local/vim.py3/bin/vim +PlugUpdate! +PlugClean! +qall \
